@@ -6,18 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamePrototype
+namespace GamePrototype.GameWorld.Tiles
 {
-    public class Tile
+    public class BaseTile
     {
 
+        public static List<BaseTile> Tiles = new List<BaseTile>();  
         public Rectangle SpriteRectangle { get; set; }
         public Rectangle TileRectangle { get; set; }
         public int TileSize { get; set; }
         public Vector2 TilePosition { get; set; }
 
 
-        public Tile() { }
+        public BaseTile() { }
 
 
         public void Update(GameTime gameTime)

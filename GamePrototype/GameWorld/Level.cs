@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamePrototype
+namespace GamePrototype.GameWorld
 {
     public class Level
     {
 
-        public Level() { }  
+        public Level() { }
 
 
         public void Update(GameTime gameTime)

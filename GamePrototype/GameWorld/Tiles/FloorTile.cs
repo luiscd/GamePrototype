@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamePrototype
+namespace GamePrototype.GameWorld.Tiles
 {
-    public class FloorTile : Tile
+    public class FloorTile : BaseTile
     {
 
-        public static List<FloorTile> floorTiles = new List<FloorTile>();    
+        public static List<FloorTile> floorTiles = new List<FloorTile>();
 
         public FloorTile()
         {

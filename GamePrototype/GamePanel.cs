@@ -1,4 +1,5 @@
 ﻿using GamePrototype.Entities.Player;
+using GamePrototype.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -15,17 +16,22 @@ namespace GamePrototype
         Level level;
         Player player;
         int spriteSize = 8;
+        int entitySize = 24;
 
         public GamePanel(Game1 game, GraphicsDevice graphicsDevice)
         {
             spriteSheet = game.Content.Load<Texture2D>("spriteSheet");
             level = new Level();
+
+
             player = new Player()
             {
+                Speed = 0.15f,
+                Direction = new Vector2(1, 1),
                 SpriteSheet = spriteSheet,
                 SpriteSize = spriteSize,
                 SpriteRectangle = new Rectangle(0, 0, spriteSize, spriteSize),
-                EntityRectangle = new Rectangle(100, 100, spriteSize, spriteSize),
+                EntityRectangle = new Rectangle((1024/2) - 12, (768/2) - 12, entitySize, entitySize),
             };
 
             Entities.BaseEntity.Entities.Add(player);
