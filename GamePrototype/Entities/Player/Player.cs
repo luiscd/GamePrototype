@@ -16,9 +16,11 @@ namespace GamePrototype.Entities.Player
 
         InputManager inputManager;
 
-        public Player()
+        public Player(Vector2 position)
         {
             inputManager = new InputManager();
+            SpriteRectangle = new Rectangle(0, 0, 8, 8);
+            EntityRectangle = new Rectangle((int)position.X, (int)position.Y, 24, 24);           
         }
 
         public override void Update(GameTime gameTime)

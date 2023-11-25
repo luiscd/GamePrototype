@@ -1,4 +1,5 @@
-﻿using GamePrototype.Entities.Player;
+﻿using GamePrototype.Engine;
+using GamePrototype.Entities.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,19 +11,25 @@ namespace GamePrototype
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public static int WIDTH = 1024;
+        public static int HEIGHT = 768;
+
+        private Camera camera;
+
         GamePanel gamePanel;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.PreferredBackBufferWidth = WIDTH;
+            _graphics.PreferredBackBufferHeight = HEIGHT;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+            camera = new Camera(GraphicsDevice.Viewport);
             gamePanel = new GamePanel(this, GraphicsDevice);
             base.Initialize();
         }
@@ -45,7 +52,7 @@ namespace GamePrototype
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix());
             gamePanel.Draw(_spriteBatch);
             _spriteBatch.End();
 

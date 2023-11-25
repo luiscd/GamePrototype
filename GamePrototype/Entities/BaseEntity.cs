@@ -23,9 +23,9 @@ namespace GamePrototype.Entities
             set { position = value; }
         }
 
-
         public Texture2D SpriteSheet { get; set; }
         public float Speed { get; set; }
+        public int Hp { get; set; }
 
 
         private Vector2 direction;
@@ -55,6 +55,7 @@ namespace GamePrototype.Entities
         {
             spriteBatch.Draw(SpriteSheet, EntityRectangle, SpriteRectangle, Color.White);
         }
+
 
         public void SetDirectionX(int _direction)
         {
