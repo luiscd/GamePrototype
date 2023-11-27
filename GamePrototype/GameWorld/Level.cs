@@ -15,6 +15,8 @@ namespace GamePrototype.GameWorld
     {
         InputManager inputManager;
 
+        private int[,] bitMap = new int[64, 64];
+
         public Level(Texture2D spriteSheet)
         {
             inputManager = new InputManager();
@@ -23,17 +25,21 @@ namespace GamePrototype.GameWorld
 
         private void LoadFloorTiles(Texture2D spriteSheet)
         {
-            for (int i = 0; i < Game1.WIDTH / 16; i++)
+            int rows = bitMap.GetLength(0);
+            int cols = bitMap.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Game1.HEIGHT / 16; j++)
+                for (int j = 0; j < cols; j++)
                 {
+                    int value = bitMap[i, j];   
+
                     BaseTile.Tiles.Add(
                         new FloorTile()
                         {
                             SpriteSheet = spriteSheet,
-                            TileSize = 24,
-                            SpriteRectangle = new Rectangle(0, 0, 16, 16),
-                            TilePosition = new Vector2(i * 16, j * 16)
+                            SpriteRectangle = new Rectangle(value * 8, value * 8, 8, 8),
+                            TilePosition = new Vector2(i * 8, j * 8)
                         }
                         );
                 }
@@ -44,7 +50,7 @@ namespace GamePrototype.GameWorld
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             float worldSpeed = 0.15f;
-            Vector2 direction = new Vector2 (1, 1);
+            Vector2 direction = new Vector2(1, 1);
 
             inputManager.UpdateState();
 

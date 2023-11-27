@@ -18,7 +18,7 @@ namespace GamePrototype.Engine
         public Camera(Viewport viewport)
         {
             this.viewport = viewport;
-            Zoom = 3.5f;
+            Zoom = 4.5f;
         }
 
         public Matrix GetViewMatrix()
