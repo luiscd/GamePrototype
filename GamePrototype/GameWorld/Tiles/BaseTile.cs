@@ -17,6 +17,10 @@ namespace GamePrototype.GameWorld.Tiles
         public int TileSize { get; set; }
         public Vector2 TilePosition { get; set; }
         public Texture2D SpriteSheet { get; set; }
+        public bool IsDraw { get; set; }
+
+        public int TileOffsetX { get; set; }
+        public int TileOffsetY { get; set; }    
 
         public BaseTile()
         {

@@ -16,38 +16,36 @@ namespace GamePrototype.Entities.Player
 
         InputManager inputManager;
 
-        public Player(Vector2 position)
+        public Player()
         {
             inputManager = new InputManager();
-            SpriteRectangle = new Rectangle(0, 0, 8, 8);
-            EntityRectangle = new Rectangle((int)position.X, (int)position.Y, 24, 24);           
         }
 
         public override void Update(GameTime gameTime)
         {
             inputManager.UpdateState();
 
-            if (inputManager.IsKeyDown(Keys.Right))
-            {
-                SetDirectionX(1);
-                CalculateWorldPositionX(gameTime);
-            }
-            else if (inputManager.IsKeyDown(Keys.Left))
-            {
-                SetDirectionX(-1);
-                CalculateWorldPositionX(gameTime);
-            }
+            //if (inputManager.IsKeyDown(Keys.Right))
+            //{
+            //    SetDirectionX(1);
+            //    CalculateWorldPositionX(gameTime);
+            //}
+            //else if (inputManager.IsKeyDown(Keys.Left))
+            //{
+            //    SetDirectionX(-1);
+            //    CalculateWorldPositionX(gameTime);
+            //}
 
-            if (inputManager.IsKeyDown(Keys.Up))
-            {
-                SetDirectionY(-1);
-                CalculateWorldPositionY(gameTime);
-            }
-            else if (inputManager.IsKeyDown(Keys.Down))
-            {
-                SetDirectionY(1);
-                CalculateWorldPositionY(gameTime);
-            }
+            //if (inputManager.IsKeyDown(Keys.Up))
+            //{
+            //    SetDirectionY(-1);
+            //    CalculateWorldPositionY(gameTime);
+            //}
+            //else if (inputManager.IsKeyDown(Keys.Down))
+            //{
+            //    SetDirectionY(1);
+            //    CalculateWorldPositionY(gameTime);
+            //}
 
             base.Update(gameTime);  
         }

@@ -11,8 +11,8 @@ namespace GamePrototype
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        public static int WIDTH = 1024;
-        public static int HEIGHT = 768;
+        public int WIDTH = 1024;
+        public int HEIGHT = 768;
 
         private Camera camera;
 

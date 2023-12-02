@@ -9,45 +9,26 @@ namespace GamePrototype
     public class GamePanel
     {
         Texture2D spriteSheet;
-        Level level;
-        Player player;
-        Zombie zombie;
+        Level level = new Level();
         
-        int spriteSize = 16;
-        int entitySize = 32;
-
         public GamePanel(Game1 game, GraphicsDevice graphicsDevice)
         {
             spriteSheet = game.Content.Load<Texture2D>("spriteSheet");
-            level = new Level(spriteSheet);
+            level.LoadLevel(spriteSheet);
 
-            //(1024 / 2) - 16, (768 / 2) - 16)
-            player = new Player(new Vector2(500,500))
-            {
-                Speed = 0.15f,
-                Direction = new Vector2(1, 1),
-                SpriteSheet = spriteSheet,
-                SpriteSize = spriteSize,
-            };
-
-            zombie = new Zombie()
-            {
-                Speed = 0.15f,
-                Direction = new Vector2(1, 1),
-                SpriteSheet = spriteSheet,
-                SpriteSize = spriteSize,
-                SpriteRectangle = new Rectangle(0, 0, spriteSize, spriteSize),
-                EntityRectangle = new Rectangle(100 - 16, 100 - 16, entitySize, entitySize),
-            };
-
-            Entities.BaseEntity.Entities.Add(player);
-            Entities.BaseEntity.Entities.Add(zombie);
+            Entities.BaseEntity.Entities.Add(
+                new Player()
+                {
+                    SpriteSheet = spriteSheet,
+                    Direction = new Vector2(1, 1),
+                    SpriteRectangle = new Rectangle(0, 8, 8, 8),
+                    Position = new Vector2(-4, -4),
+                });
         }
 
         public void Update(GameTime gameTime)
         {
             level.Update(gameTime);
-            //player.Update(gameTime);
 
             //foreach (var entity in Entities.BaseEntity.Entities)
             //{
@@ -58,11 +39,11 @@ namespace GamePrototype
         public void Draw(SpriteBatch spriteBatch)
         {
             level.Draw(spriteBatch);
-            //player.Draw(spriteBatch);
-            //foreach (var entity in Entities.BaseEntity.Entities)
-            //{
-            //    entity.Draw(spriteBatch);
-            //}
+         
+            foreach (var entity in Entities.BaseEntity.Entities)
+            {
+                entity.Draw(spriteBatch);
+            }
         }
 
     }

@@ -18,14 +18,14 @@ namespace GamePrototype.Engine
         public Camera(Viewport viewport)
         {
             this.viewport = viewport;
-            Zoom = 4.5f;
+            Zoom = 3.5f;
         }
 
         public Matrix GetViewMatrix()
         {
             return Matrix.CreateTranslation(new Vector3(-Position, 0.0f)) *
                                           Matrix.CreateScale(new Vector3(Zoom, Zoom, 1.0f)) *
-                                          Matrix.CreateTranslation(new Vector3(viewport.Width * 0.0f, viewport.Height * 0.0f, 0f));
+                                          Matrix.CreateTranslation(new Vector3(viewport.Width * 0.5f, viewport.Height * 0.5f, 0f));
         }
 
     }

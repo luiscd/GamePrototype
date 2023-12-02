@@ -12,7 +12,6 @@ namespace GamePrototype.Entities
     {
         public static List<BaseEntity> Entities = new List<BaseEntity>();
         public Rectangle SpriteRectangle { get; set; }
-        public Rectangle EntityRectangle { get; set; }
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
 
@@ -44,7 +43,7 @@ namespace GamePrototype.Entities
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
-            EntityRectangle = new Rectangle((int)Position.X, (int)Position.Y, SpriteSize, SpriteSize);
+            //EntityRectangle = new Rectangle((int)Position.X, (int)Position.Y, SpriteSize, SpriteSize);
         }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace GamePrototype.Entities
         /// <param name="spriteBatch"></param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, EntityRectangle, SpriteRectangle, Color.White);
+            spriteBatch.Draw(SpriteSheet, Position, SpriteRectangle, Color.White);
         }
 
 
