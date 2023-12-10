@@ -1,5 +1,6 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities;
+using GamePrototype.Entities.Mob;
 using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,9 +21,12 @@ namespace GamePrototype.GameWorld
         private int worldSize;
         private int chunkSize;
 
+        private Vector2 mapPosition;
+
         public Level()
         {
             inputManager = new InputManager();
+            mapPosition = new Vector2(0, 0);
         }
 
         public void LoadLevel(Texture2D spriteSheet)
@@ -80,10 +84,21 @@ namespace GamePrototype.GameWorld
             }
         }
 
+
+        float CalculateMapPositionX(float worldSpeed, float deltaTime, Vector2 direction)
+        {
+            return worldSpeed * deltaTime * direction.X;
+        }
+
+        float CalculateMapPositionY(float worldSpeed, float deltaTime, Vector2 direction)
+        {
+            return worldSpeed * deltaTime * direction.Y;
+        }
+
         public void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            float worldSpeed = 0.15f;
+            float worldSpeed = 0.10f;
             Vector2 direction = new Vector2(1, 1);
 
             inputManager.UpdateState();
@@ -91,36 +106,39 @@ namespace GamePrototype.GameWorld
             if (inputManager.IsKeyDown(Keys.Right))
             {
                 direction.X = -1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X + (worldSpeed * deltaTime * direction.X), tile.TilePosition.Y);
-                }
+                mapPosition.X = CalculateMapPositionX(worldSpeed, deltaTime, direction);
             }
             else if (inputManager.IsKeyDown(Keys.Left))
             {
                 direction.X = 1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X + (worldSpeed * deltaTime * direction.X), tile.TilePosition.Y);
-                }
+                mapPosition.X = CalculateMapPositionX(worldSpeed, deltaTime, direction);
+
             }
 
             if (inputManager.IsKeyDown(Keys.Down))
             {
                 direction.Y = -1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X, tile.TilePosition.Y + (worldSpeed * deltaTime * direction.Y));
-                }
+                mapPosition.Y = CalculateMapPositionY(worldSpeed, deltaTime, direction);
+
             }
             else if (inputManager.IsKeyDown(Keys.Up))
             {
                 direction.Y = 1;
-                foreach (var tile in BaseTile.Tiles)
+                mapPosition.Y = CalculateMapPositionY(worldSpeed, deltaTime, direction);
+            }
+
+            foreach (var tile in BaseTile.Tiles)
+            {
+                if ()
                 {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X, tile.TilePosition.Y + (worldSpeed * deltaTime * direction.Y));
+                    tile.TilePosition += new Vector2(mapPosition.X, mapPosition.Y);
                 }
             }
+
+            //foreach (var mob in Mob.Mobs)
+            //{
+            //    mob.Position = mapPosition;
+            //}
         }
 
         public void Draw(SpriteBatch spriteBatch)

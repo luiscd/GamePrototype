@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace GamePrototype.Entities
         public Texture2D SpriteSheet { get; set; }
         public float Speed { get; set; }
         public int Hp { get; set; }
-
+        public bool IsMob { get; set; }
 
         private Vector2 direction;
         public Vector2 Direction
@@ -44,6 +45,10 @@ namespace GamePrototype.Entities
         public virtual void Update(GameTime gameTime)
         {
             //EntityRectangle = new Rectangle((int)Position.X, (int)Position.Y, SpriteSize, SpriteSize);
+            //CalculateWorldPositionX(gameTime);
+            var dt = gameTime.ElapsedGameTime.TotalSeconds; 
+            Position = new Vector2((float)((int)0.15f * dt * direction.X), (float)((int)0.15f * dt * direction.Y));
+            Debug.WriteLine("Position vector: " + Position);
         }
 
         /// <summary>
@@ -59,8 +64,6 @@ namespace GamePrototype.Entities
         public void SetDirectionX(int _direction)
         {
             direction.X = _direction;
-            //direction = physics.SetDirectionX(direction, _direction);
-            //Effect = this.direction.X == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
         }
 
         public void SetDirectionY(int _direction)

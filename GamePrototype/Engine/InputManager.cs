@@ -12,6 +12,7 @@ namespace GamePrototype.Engine
 
         public KeyboardState keyState;
         public KeyboardState lastKeyState;
+        public bool isPressed;
 
         public void UpdateState()
         {
@@ -20,6 +21,7 @@ namespace GamePrototype.Engine
 
         public bool IsKeyDown(Keys key)
         {
+            isPressed = true;
             return keyState.IsKeyDown(key);
         }
 
