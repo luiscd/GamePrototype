@@ -48,7 +48,6 @@ namespace GamePrototype.Entities
             //CalculateWorldPositionX(gameTime);
             var dt = gameTime.ElapsedGameTime.TotalSeconds; 
             Position = new Vector2((float)((int)0.15f * dt * direction.X), (float)((int)0.15f * dt * direction.Y));
-            Debug.WriteLine("Position vector: " + Position);
         }
 
         /// <summary>

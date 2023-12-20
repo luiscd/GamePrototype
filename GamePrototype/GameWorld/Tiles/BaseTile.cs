@@ -15,12 +15,14 @@ namespace GamePrototype.GameWorld.Tiles
         public Rectangle SpriteRectangle { get; set; }
         //public Rectangle TileRectangle { get; set; }
         public int TileSize { get; set; }
-        public Vector2 TilePosition { get; set; }
+
+        private Vector2 tilePosition;
+        public Vector2 TilePosition { get { return tilePosition; } set { tilePosition = value; } }
         public Texture2D SpriteSheet { get; set; }
         public bool IsDraw { get; set; }
 
         public int TileOffsetX { get; set; }
-        public int TileOffsetY { get; set; }    
+        public int TileOffsetY { get; set; }
 
         public BaseTile()
         {
@@ -35,5 +37,16 @@ namespace GamePrototype.GameWorld.Tiles
             spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White);
         }
 
+
+        // Public method to set the tile position with bounds checking
+        public void SetTilePosition(Vector2 newPosition)
+        {
+            // Perform bounds checking
+            //float clampedX = MathHelper.Clamp(newPosition.X, -tileSize, maxX - tileSize);
+            //float clampedY = MathHelper.Clamp(newPosition.Y, 0, maxY - tileSize);
+
+            // Set the tile position
+            TilePosition = newPosition;
+        }
     }
 }

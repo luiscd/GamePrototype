@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -31,8 +33,8 @@ namespace GamePrototype.GameWorld
 
         public void LoadLevel(Texture2D spriteSheet)
         {
-            chunkSize = 16;
-            worldSize = 10;
+            chunkSize = 2;
+            worldSize = 3;
             int tileSize = 8;
             int[,] world = new int[chunkSize * worldSize, chunkSize * worldSize];
             int xOffset = (worldSize * chunkSize * tileSize) / 2;
@@ -58,6 +60,12 @@ namespace GamePrototype.GameWorld
                         });
                 }
             }
+
+
+            float firstColumnX = GetFirstColumnPositionX(tileSize, chunkSize * worldSize, tileSize);
+            // Assuming your tiles have a common Y position (e.g., 0)
+            Vector2 firstColumnPosition = new Vector2(firstColumnX, 0);
+            Debug.WriteLine(firstColumnPosition);
         }
 
 
@@ -68,12 +76,12 @@ namespace GamePrototype.GameWorld
                 for (int j = 0; j < worldSize; j++)
                 {
                     int[,] chunk = new int[chunkSize, chunkSize];
-                    PlaceChunkInWorld(world, chunk, chunkSize, worldSize, i, j);
+                    PlaceChunkInWorld(world, chunk, chunkSize, i, j);
                 }
             }
         }
 
-        void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int worldSize, int xIndex, int yIndex)
+        void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int xIndex, int yIndex)
         {
             for (int i = 0; i < chunkSize; i++)
             {
@@ -83,7 +91,6 @@ namespace GamePrototype.GameWorld
                 }
             }
         }
-
 
         float CalculateMapPositionX(float worldSpeed, float deltaTime, Vector2 direction)
         {
@@ -95,6 +102,21 @@ namespace GamePrototype.GameWorld
             return worldSpeed * deltaTime * direction.Y;
         }
 
+
+        // Assuming tileSize is the width of each tile, numTilesX is the number of tiles in a row,
+        // and tileSpacingX is the spacing between tiles (if any)
+        float GetFirstColumnPositionX(float tileSize, int numTilesX, float tileSpacingX)
+        {
+            // Calculate the total width of the tiles and spacing in the first column
+            float firstColumnWidth = (numTilesX - 1) * tileSpacingX + numTilesX * tileSize;
+
+            // Assuming the origin (0, 0) is the top-left corner, the X position of the first column
+            // is half the total width, as the tiles are centered
+            return -firstColumnWidth / 2;
+        }
+
+
+
         public void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -103,41 +125,40 @@ namespace GamePrototype.GameWorld
 
             inputManager.UpdateState();
 
-            if (inputManager.IsKeyDown(Keys.Right))
-            {
-                direction.X = -1;
-                mapPosition.X = CalculateMapPositionX(worldSpeed, deltaTime, direction);
-            }
-            else if (inputManager.IsKeyDown(Keys.Left))
-            {
-                direction.X = 1;
-                mapPosition.X = CalculateMapPositionX(worldSpeed, deltaTime, direction);
-
-            }
-
-            if (inputManager.IsKeyDown(Keys.Down))
-            {
-                direction.Y = -1;
-                mapPosition.Y = CalculateMapPositionY(worldSpeed, deltaTime, direction);
-
-            }
-            else if (inputManager.IsKeyDown(Keys.Up))
-            {
-                direction.Y = 1;
-                mapPosition.Y = CalculateMapPositionY(worldSpeed, deltaTime, direction);
-            }
-
-            foreach (var tile in BaseTile.Tiles)
-            {
-                if ()
-                {
-                    tile.TilePosition += new Vector2(mapPosition.X, mapPosition.Y);
-                }
-            }
-
-            //foreach (var mob in Mob.Mobs)
+            //foreach (var tile in BaseTile.Tiles)
             //{
-            //    mob.Position = mapPosition;
+                //if (inputManager.IsKeyDown(Keys.Right))
+                //{
+                //    direction.X = -1;
+                //    tile.SetTilePosition(new Vector2(tile.TilePosition.X + CalculateMapPositionX(worldSpeed, deltaTime, direction), tile.TilePosition.Y));
+                //}
+                //else if (inputManager.IsKeyDown(Keys.Left))
+                //{
+                //    direction.X = 1;
+                //    tile.SetTilePosition(new Vector2(tile.TilePosition.X + CalculateMapPositionX(worldSpeed, deltaTime, direction), tile.TilePosition.Y));
+
+                //    if (tile.TilePosition.X > -1000)
+                //    {
+                //        tile.SetTilePosition(new Vector2(tile.TilePosition.X, tile.TilePosition.Y));
+                //    }
+
+                //}
+
+                //if (inputManager.IsKeyDown(Keys.Up))
+                //{
+                //    direction.Y = 1;
+                //    tile.SetTilePosition(new Vector2(tile.TilePosition.X, tile.TilePosition.Y + CalculateMapPositionY(worldSpeed, deltaTime, direction)));
+                //}
+                //else if (inputManager.IsKeyDown(Keys.Down))
+                //{
+                //    direction.Y = -1;
+                //    tile.SetTilePosition(new Vector2(tile.TilePosition.X, tile.TilePosition.Y + CalculateMapPositionY(worldSpeed, deltaTime, direction)));
+                //}
+
+
+                //foreach (var mob in Mob.Mobs)
+                //{
+                //    mob.Position = mapPosition;
             //}
         }
 
@@ -145,13 +166,13 @@ namespace GamePrototype.GameWorld
         {
             foreach (var tile in BaseTile.Tiles)
             {
-                if ((tile.TilePosition.X < (chunkSize + tile.TileSize) * tile.TileSize) &&
-                    (tile.TilePosition.X > -(chunkSize + tile.TileSize) * tile.TileSize) &&
-                    (tile.TilePosition.Y < chunkSize * tile.TileSize) &&
-                    (tile.TilePosition.Y > -(chunkSize + 1) * tile.TileSize))
-                {
+                //if ((tile.TilePosition.X < (chunkSize + tile.TileSize) * tile.TileSize) &&
+                //    (tile.TilePosition.X > -(chunkSize + tile.TileSize) * tile.TileSize) &&
+                //    (tile.TilePosition.Y < chunkSize * tile.TileSize) &&
+                //    (tile.TilePosition.Y > -(chunkSize + 1) * tile.TileSize))
+                //{
                     tile.Draw(spriteBatch);
-                }
+                //}
 
             }
         }

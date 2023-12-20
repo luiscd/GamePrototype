@@ -21,8 +21,6 @@ namespace GamePrototype.Entities.Mob
         {
             actionLocker++;
 
-            Debug.WriteLine(actionLocker);
-
             if (actionLocker == 120)
             {
                 Random random = new Random();
@@ -54,8 +52,6 @@ namespace GamePrototype.Entities.Mob
 
                 actionLocker = 0;
             }
-
-            Debug.WriteLine("Direction vector: " + Direction);
 
             base.Update(gameTime);
         }
