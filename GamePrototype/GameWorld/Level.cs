@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -16,19 +17,23 @@ namespace GamePrototype.GameWorld
 {
     public class Level
     {
-        InputManager inputManager;
         private int worldSize;
         private int chunkSize;
 
+        public int WorldWidth { get; set; }
+        public int WorldHeight { get; set; }    
+
         public Level()
         {
-            inputManager = new InputManager();
+            chunkSize = 16;
+            worldSize = 5;
+
+            WorldWidth = chunkSize * worldSize;
+            WorldHeight = chunkSize * worldSize;
         }
 
         public void LoadLevel(Texture2D spriteSheet)
         {
-            chunkSize = 16;
-            worldSize = 10;
             int tileSize = 8;
             int[,] world = new int[chunkSize * worldSize, chunkSize * worldSize];
             int xOffset = (worldSize * chunkSize * tileSize) / 2;
@@ -56,7 +61,6 @@ namespace GamePrototype.GameWorld
             }
         }
 
-
         void PopulateWorld(int[,] world, int chunkSize, int worldSize)
         {
             for (int i = 0; i < worldSize; i++)
@@ -82,58 +86,20 @@ namespace GamePrototype.GameWorld
 
         public void Update(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            float worldSpeed = 0.15f;
-            Vector2 direction = new Vector2(1, 1);
-
-            inputManager.UpdateState();
-
-            if (inputManager.IsKeyDown(Keys.Right))
-            {
-                direction.X = -1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X + (worldSpeed * deltaTime * direction.X), tile.TilePosition.Y);
-                }
-            }
-            else if (inputManager.IsKeyDown(Keys.Left))
-            {
-                direction.X = 1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X + (worldSpeed * deltaTime * direction.X), tile.TilePosition.Y);
-                }
-            }
-
-            if (inputManager.IsKeyDown(Keys.Down))
-            {
-                direction.Y = -1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X, tile.TilePosition.Y + (worldSpeed * deltaTime * direction.Y));
-                }
-            }
-            else if (inputManager.IsKeyDown(Keys.Up))
-            {
-                direction.Y = 1;
-                foreach (var tile in BaseTile.Tiles)
-                {
-                    tile.TilePosition = new Vector2(tile.TilePosition.X, tile.TilePosition.Y + (worldSpeed * deltaTime * direction.Y));
-                }
-            }
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var tile in BaseTile.Tiles)
             {
-                if ((tile.TilePosition.X < (chunkSize + tile.TileSize) * tile.TileSize) &&
-                    (tile.TilePosition.X > -(chunkSize + tile.TileSize) * tile.TileSize) &&
-                    (tile.TilePosition.Y < chunkSize * tile.TileSize) &&
-                    (tile.TilePosition.Y > -(chunkSize + 1) * tile.TileSize))
-                {
+                //if ((tile.TilePosition.X < (chunkSize + tile.TileSize) * tile.TileSize) &&
+                //    (tile.TilePosition.X > -(chunkSize + tile.TileSize) * tile.TileSize) &&
+                //    (tile.TilePosition.Y < chunkSize * tile.TileSize) &&
+                //    (tile.TilePosition.Y > -(chunkSize + 1) * tile.TileSize))
+                //{
                     tile.Draw(spriteBatch);
-                }
+                //}
 
             }
         }

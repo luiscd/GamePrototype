@@ -1,8 +1,10 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities.Player;
+using GamePrototype.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace GamePrototype
 {
@@ -14,9 +16,14 @@ namespace GamePrototype
         public int WIDTH = 1024;
         public int HEIGHT = 768;
 
-        private Camera camera;
+        Texture2D spriteSheet;
 
-        GamePanel gamePanel;
+        Level level = new Level();
+
+        Player player;
+        Camera camera;
+
+        int spriteRadius = 4;
 
         public Game1()
         {
@@ -29,8 +36,21 @@ namespace GamePrototype
 
         protected override void Initialize()
         {
-            camera = new Camera(GraphicsDevice.Viewport);
-            gamePanel = new GamePanel(this, GraphicsDevice);
+            spriteSheet = Content.Load<Texture2D>("spriteSheet");
+
+            level.LoadLevel(spriteSheet);
+
+            player = new Player()
+            {
+                SpriteSheet = spriteSheet,
+                Speed = 0.10f,
+                Direction = new Vector2(1, 1),
+                SpriteRectangle = new Rectangle(0, 8, spriteRadius * 2, spriteRadius * 2),
+                WorldPosition = new Vector2(-spriteRadius, -spriteRadius)
+            };
+
+            camera = new Camera(GraphicsDevice.Viewport, player.WorldPosition);
+
             base.Initialize();
         }
 
@@ -44,18 +64,22 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            gamePanel.Update(gameTime);
+            player.Update(gameTime);
+            camera.Follow(player);
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix());
-            gamePanel.Draw(_spriteBatch);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.Transform);
+
+            level.Draw(_spriteBatch);
+            player.Draw(_spriteBatch);
+
             _spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }

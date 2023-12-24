@@ -15,17 +15,16 @@ namespace GamePrototype.Entities
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
 
-        private Vector2 position;
-        public Vector2 Position
+        private Vector2 worldPosition;
+        public Vector2 WorldPosition
         {
-            get { return position; }
-            set { position = value; }
+            get { return worldPosition; }
+            set { worldPosition = value; }
         }
 
         public Texture2D SpriteSheet { get; set; }
         public float Speed { get; set; }
         public int Hp { get; set; }
-
 
         private Vector2 direction;
         public Vector2 Direction
@@ -35,26 +34,6 @@ namespace GamePrototype.Entities
         }
 
         public BaseEntity() { }
-
-
-        /// <summary>
-        /// Base Entity Update Method
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public virtual void Update(GameTime gameTime)
-        {
-            //EntityRectangle = new Rectangle((int)Position.X, (int)Position.Y, SpriteSize, SpriteSize);
-        }
-
-        /// <summary>
-        /// Base Entity Draw Method
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(SpriteSheet, Position, SpriteRectangle, Color.White);
-        }
-
 
         public void SetDirectionX(int _direction)
         {
@@ -68,16 +47,14 @@ namespace GamePrototype.Entities
             direction.Y = _direction;
         }
 
-        public void CalculateWorldPositionX(GameTime gameTime)
+        public void CalculateWorldPositionX(double deltaTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            position.X += Speed * deltaTime * Direction.X;
+            worldPosition.X += Speed * (float)deltaTime * Direction.X;
         }
 
-        public void CalculateWorldPositionY(GameTime gameTime)
+        public void CalculateWorldPositionY(double deltaTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            position.Y += Speed * deltaTime * Direction.Y;
+            worldPosition.Y += Speed * (float)deltaTime * Direction.Y;
         }
 
     }
