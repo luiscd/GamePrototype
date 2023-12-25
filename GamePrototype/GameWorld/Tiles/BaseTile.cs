@@ -20,7 +20,6 @@ namespace GamePrototype.GameWorld.Tiles {
             set { tileSize = value; }
         }
 
-
         private Vector2 tilePosition;
         public Vector2 TilePosition {
             get { return tilePosition; }

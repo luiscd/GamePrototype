@@ -26,8 +26,7 @@ namespace GamePrototype.GameWorld
         public Level()
         {
             chunkSize = 16;
-            worldSize = 5;
-
+            worldSize = 4;
             WorldWidth = chunkSize * worldSize;
             WorldHeight = chunkSize * worldSize;
         }
@@ -82,11 +81,6 @@ namespace GamePrototype.GameWorld
                     world[xIndex * chunkSize + i, yIndex * chunkSize + j] = chunk[i, j];
                 }
             }
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            
         }
 
         public void Draw(SpriteBatch spriteBatch)

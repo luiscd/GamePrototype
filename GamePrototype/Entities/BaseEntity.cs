@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -55,6 +56,16 @@ namespace GamePrototype.Entities
         public void CalculateWorldPositionY(double deltaTime)
         {
             worldPosition.Y += Speed * (float)deltaTime * Direction.Y;
+        }
+
+        public void SetWorldPositionX(float _worldPositionX)
+        {
+            worldPosition.X = _worldPositionX / 4;
+        }
+
+        public void SetWorldPostionY(int _worldPositionY)
+        {
+            worldPosition.Y = _worldPositionY;
         }
 
     }

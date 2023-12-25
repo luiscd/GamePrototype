@@ -17,7 +17,7 @@ namespace GamePrototype.Entities.Mob
         public Mob() { }
 
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             actionLocker++;
 
@@ -53,7 +53,6 @@ namespace GamePrototype.Entities.Mob
                 actionLocker = 0;
             }
 
-            base.Update(gameTime);
         }
     }
 }

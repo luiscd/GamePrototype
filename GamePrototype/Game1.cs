@@ -64,7 +64,7 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update(gameTime);
+            player.Update(gameTime, level);
             camera.Follow(player);
 
             base.Update(gameTime);
@@ -82,5 +82,6 @@ namespace GamePrototype
             _spriteBatch.End();
             base.Draw(gameTime);
         }
+
     }
 }
