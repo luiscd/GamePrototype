@@ -1,17 +1,7 @@
-﻿using GamePrototype.Engine;
-using GamePrototype.Entities;
-using GamePrototype.GameWorld.Tiles;
+﻿using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace GamePrototype.GameWorld
 {
@@ -21,7 +11,10 @@ namespace GamePrototype.GameWorld
         private int chunkSize;
 
         public int WorldWidth { get; set; }
-        public int WorldHeight { get; set; }    
+        public int WorldHeight { get; set; }
+        private int[,] world;
+
+        public static List<BaseTile> VisibleTiles = new List<BaseTile>();
 
         public Level()
         {
@@ -34,7 +27,9 @@ namespace GamePrototype.GameWorld
         public void LoadLevel(Texture2D spriteSheet)
         {
             int tileSize = 8;
-            int[,] world = new int[chunkSize * worldSize, chunkSize * worldSize];
+            
+
+            world = new int[chunkSize * worldSize, chunkSize * worldSize];
             int xOffset = (worldSize * chunkSize * tileSize) / 2;
             int yOffset = (worldSize * chunkSize * tileSize) / 2;
 
@@ -60,7 +55,7 @@ namespace GamePrototype.GameWorld
             }
         }
 
-        void PopulateWorld(int[,] world, int chunkSize, int worldSize)
+        private static void PopulateWorld(int[,] world, int chunkSize, int worldSize)
         {
             for (int i = 0; i < worldSize; i++)
             {
@@ -72,7 +67,7 @@ namespace GamePrototype.GameWorld
             }
         }
 
-        void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int worldSize, int xIndex, int yIndex)
+        private static void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int worldSize, int xIndex, int yIndex)
         {
             for (int i = 0; i < chunkSize; i++)
             {
@@ -85,16 +80,9 @@ namespace GamePrototype.GameWorld
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var tile in BaseTile.Tiles)
+            foreach (var tile in VisibleTiles)
             {
-                //if ((tile.TilePosition.X < (chunkSize + tile.TileSize) * tile.TileSize) &&
-                //    (tile.TilePosition.X > -(chunkSize + tile.TileSize) * tile.TileSize) &&
-                //    (tile.TilePosition.Y < chunkSize * tile.TileSize) &&
-                //    (tile.TilePosition.Y > -(chunkSize + 1) * tile.TileSize))
-                //{
-                    tile.Draw(spriteBatch);
-                //}
-
+                tile.Draw(spriteBatch);
             }
         }
 

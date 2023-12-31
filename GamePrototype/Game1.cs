@@ -49,8 +49,7 @@ namespace GamePrototype
                 WorldPosition = new Vector2(-spriteRadius, -spriteRadius)
             };
 
-            camera = new Camera(GraphicsDevice.Viewport, player.WorldPosition);
-
+            camera = new Camera(GraphicsDevice.Viewport, new Vector2(player.WorldPosition.X, player.WorldPosition.Y));
             base.Initialize();
         }
 
@@ -65,8 +64,7 @@ namespace GamePrototype
                 Exit();
 
             player.Update(gameTime, level);
-            camera.Follow(player);
-
+            
             base.Update(gameTime);
         }
 
@@ -74,7 +72,7 @@ namespace GamePrototype
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.Transform);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(player.WorldPosition, level));
 
             level.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
@@ -82,6 +80,8 @@ namespace GamePrototype
             _spriteBatch.End();
             base.Draw(gameTime);
         }
+
+
 
     }
 }

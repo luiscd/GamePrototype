@@ -41,12 +41,5 @@ namespace GamePrototype.GameWorld.Tiles {
         public virtual void Draw(SpriteBatch spriteBatch) {
             spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White);
         }
-
-        //public void CalculatePosition(Vector2 direction, float worldSpeed, float deltaTime, int levelSize) {
-        //    tilePosition = new Vector2(tilePosition.X + (worldSpeed * deltaTime * direction.X), tilePosition.Y + (worldSpeed * deltaTime * direction.Y));
-        //    tilePosition.X = MathHelper.Clamp(tilePosition.X, 0, levelSize - tileSize); // Assuming tileSize is the width of each tile
-        //    tilePosition.Y = MathHelper.Clamp(tilePosition.Y, 0, levelSize - tileSize); // Assuming tileSize is the height of each tile
-        //}
-
     }
 }

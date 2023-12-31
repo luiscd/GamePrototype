@@ -3,8 +3,6 @@ using GamePrototype.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using System.Reflection.Emit;
 
 namespace GamePrototype.Entities.Player
 {
@@ -26,7 +24,7 @@ namespace GamePrototype.Entities.Player
             if (inputManager.IsKeyDown(Keys.Right))
             {
                 SetDirectionX(1);
-                if (WorldPosition.X / 4 >= (level.WorldWidth * Direction.X))
+                if ((WorldPosition.X / 4) + 2 >= (level.WorldWidth * Direction.X))
                 {
                     SetDirectionX(0);
                 }
@@ -57,7 +55,7 @@ namespace GamePrototype.Entities.Player
             else if (inputManager.IsKeyDown(Keys.Down))
             {
                 SetDirectionY(1);
-                if (WorldPosition.Y / 4 >= (level.WorldHeight * Direction.Y))
+                if (WorldPosition.Y / 4 + 2 >= (level.WorldHeight * Direction.Y))
                 {
                     SetDirectionY(0);
                 }
@@ -76,13 +74,16 @@ namespace GamePrototype.Entities.Player
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public int CalculateWorldRadius(Level level)
+        public bool CalculateWorldRadius(Level level)
         {
             //limite da posicao do mundo - posicao do player
-            var radius = level.WorldWidth - WorldPosition.X;
+            var radius = (level.WorldWidth * Direction.X) - (WorldPosition.X / 8);
 
-           
-            return 0;
+            if (radius <= level.WorldWidth / 2)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
