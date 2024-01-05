@@ -3,7 +3,10 @@ using GamePrototype.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Authentication;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GamePrototype.Entities.Player
 {
@@ -12,12 +15,14 @@ namespace GamePrototype.Entities.Player
         InputManager inputManager;
         Animation animation;
 
+        private bool isIdle;
         private Rectangle[] spriteArray = new Rectangle[6];
 
         public Player() : base()
         {
             inputManager = new InputManager();
             animation = new Animation();
+            Effect = SpriteEffects.None;
 
             //
             //Down movement animation
@@ -52,9 +57,8 @@ namespace GamePrototype.Entities.Player
             SpriteArrayRight[4] = new Rectangle(224, 32, 16, 16);
             SpriteArrayRight[5] = new Rectangle(240, 32, 16, 16);
 
-
             //
-            //Rigt idle animation
+            //Rigth idle animation
             //
             SpriteArrayIdleRight = new Rectangle[6];
             SpriteArrayIdleRight[0] = new Rectangle(160, 48, 16, 16);
@@ -64,25 +68,27 @@ namespace GamePrototype.Entities.Player
             SpriteArrayIdleRight[4] = new Rectangle(224, 48, 16, 16);
             SpriteArrayIdleRight[5] = new Rectangle(240, 48, 16, 16);
 
+            //
+            //Up movement animation
+            //
+            SpriteArrayUp = new Rectangle[6];
+            SpriteArrayUp[0] = new Rectangle(160, 64, 16, 16);
+            SpriteArrayUp[1] = new Rectangle(178, 64, 16, 16);
+            SpriteArrayUp[2] = new Rectangle(192, 64, 16, 16);
+            SpriteArrayUp[3] = new Rectangle(208, 64, 16, 16);
+            SpriteArrayUp[4] = new Rectangle(224, 64, 16, 16);
+            SpriteArrayUp[5] = new Rectangle(240, 64, 16, 16);
 
-            //SpriteArrayIdleRight = new Rectangle[6];
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    SpriteArrayIdleRight[i] = new Rectangle(i * 16, 48, 16, 16);
-            //}
-
-            ////Movement left animation
-            //SpriteArrayLeft = new Rectangle[6];
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    SpriteArrayLeft[i] = new Rectangle(i * 16, 48, 16, 16);
-            //}
-
-            //SpriteArrayIdleLeft = new Rectangle[6];
-            //for (int i = 0; i < 6; i++)
-            //{
-            //    SpriteArrayIdleLeft[i] = new Rectangle(i * 16, 48, 16, 16);
-            //}
+            //
+            //Up idle animation
+            //
+            SpriteArrayIdleUp = new Rectangle[6];
+            SpriteArrayIdleUp[0] = new Rectangle(160, 80, 16, 16);
+            SpriteArrayIdleUp[1] = new Rectangle(178, 80, 16, 16);
+            SpriteArrayIdleUp[2] = new Rectangle(192, 80, 16, 16);
+            SpriteArrayIdleUp[3] = new Rectangle(208, 80, 16, 16);
+            SpriteArrayIdleUp[4] = new Rectangle(224, 80, 16, 16);
+            SpriteArrayIdleUp[5] = new Rectangle(240, 80, 16, 16);
 
             spriteArray = SpriteArrayIdleDown;
         }
@@ -94,6 +100,7 @@ namespace GamePrototype.Entities.Player
 
             if (inputManager.IsKeyDown(Keys.Right))
             {
+                inputManager.SaveLastState();
                 spriteArray = SpriteArrayRight;
                 SetDirectionX(1);
 
@@ -103,12 +110,13 @@ namespace GamePrototype.Entities.Player
                 }
 
                 CalculateWorldPositionX(deltaTime);
-
             }
             else if (inputManager.IsKeyDown(Keys.Left))
             {
-                //spriteArray = SpriteArrayLeft;
+                inputManager.SaveLastState();
+                spriteArray = SpriteArrayRight;
                 SetDirectionX(-1);
+
                 if (WorldPosition.X / 4 <= level.WorldWidth * Direction.X)
                 {
                     SetDirectionX(0);
@@ -117,10 +125,13 @@ namespace GamePrototype.Entities.Player
                 CalculateWorldPositionX(deltaTime);
             }
 
+
             if (inputManager.IsKeyDown(Keys.Up))
             {
-                //spriteArray = SpriteArrayUp;
+                inputManager.SaveLastState();
+                spriteArray = SpriteArrayUp;
                 SetDirectionY(-1);
+
                 if (WorldPosition.Y / 4 <= level.WorldHeight * Direction.Y)
                 {
                     SetDirectionY(0);
@@ -130,8 +141,10 @@ namespace GamePrototype.Entities.Player
             }
             else if (inputManager.IsKeyDown(Keys.Down))
             {
+                inputManager.SaveLastState();
                 spriteArray = SpriteArrayDown;
                 SetDirectionY(1);
+
                 if (WorldPosition.Y / 4 + 2 >= (level.WorldHeight * Direction.Y))
                 {
                     SetDirectionY(0);
@@ -140,12 +153,35 @@ namespace GamePrototype.Entities.Player
                 CalculateWorldPositionY(deltaTime);
             }
 
-            animation.Update(gameTime, spriteArray);        
+            if (inputManager.LastKeyState(Keys.Right))
+            {
+                spriteArray = SpriteArrayIdleRight;
+            }
+
+            if (inputManager.LastKeyState(Keys.Left))
+            {
+                spriteArray = SpriteArrayIdleRight;
+            }
+
+            if (inputManager.LastKeyState(Keys.Down))
+            {
+                spriteArray = SpriteArrayIdleDown;
+            }
+
+            if (inputManager.LastKeyState(Keys.Up))
+            {
+                spriteArray = SpriteArrayIdleUp;
+            }
+
+            animation.Update(gameTime, spriteArray);
         }
 
         public void Draw(SpriteBatch spriteBactch)
         {
-            spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White);
+            //spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0.0f, Vector2.Zero, Vector2.Zero, Effect, 0.0f);
+
+            spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+
         }
 
     }

@@ -48,7 +48,7 @@ namespace GamePrototype
             {
                 SpriteSheet = spriteSheet,
                 Speed = 0.10f,
-                Direction = new Vector2(1, 1),
+                Direction = new Vector2(0, 0),
                 WorldPosition = new Vector2(-spriteRadius, -spriteRadius),
                 Name = playerEntity.Name,
                 AttackDamage = playerEntity.AttackDamage,

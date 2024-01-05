@@ -10,9 +10,9 @@ namespace GamePrototype.Engine
     public class InputManager
     {
 
-        public KeyboardState keyState;
-        public KeyboardState lastKeyState;
-        public bool isPressed;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        private bool isPressed;
 
         public void UpdateState()
         {
