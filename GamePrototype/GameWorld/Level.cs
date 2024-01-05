@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GamePrototype.GameWorld
 {
@@ -26,9 +27,8 @@ namespace GamePrototype.GameWorld
 
         public void LoadLevel(Texture2D spriteSheet)
         {
-            int tileSize = 8;
+            int tileSize = 16;
             
-
             world = new int[chunkSize * worldSize, chunkSize * worldSize];
             int xOffset = (worldSize * chunkSize * tileSize) / 2;
             int yOffset = (worldSize * chunkSize * tileSize) / 2;
@@ -57,17 +57,19 @@ namespace GamePrototype.GameWorld
 
         private static void PopulateWorld(int[,] world, int chunkSize, int worldSize)
         {
+            Debug.WriteLine(chunkSize);
+
             for (int i = 0; i < worldSize; i++)
             {
                 for (int j = 0; j < worldSize; j++)
                 {
                     int[,] chunk = new int[chunkSize, chunkSize];
-                    PlaceChunkInWorld(world, chunk, chunkSize, worldSize, i, j);
+                    PlaceChunkInWorld(world, chunk, chunkSize, i, j);
                 }
             }
         }
 
-        private static void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int worldSize, int xIndex, int yIndex)
+        private static void PlaceChunkInWorld(int[,] world, int[,] chunk, int chunkSize, int xIndex, int yIndex)
         {
             for (int i = 0; i < chunkSize; i++)
             {

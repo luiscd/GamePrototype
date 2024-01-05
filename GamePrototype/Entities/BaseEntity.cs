@@ -1,18 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using GamePrototype.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GamePrototype.Entities
 {
+
     public class BaseEntity
     {
         public static List<BaseEntity> Entities = new List<BaseEntity>();
-        public Rectangle SpriteRectangle { get; set; }
+
+        public Rectangle[] SpriteArrayRight { get; set; }
+        public Rectangle[] SpriteArrayIdleRight { get; set; }
+
+        public Rectangle[] SpriteArrayLeft { get; set; }
+        public Rectangle[] SpriteArrayIdleLeft { get; set; }
+
+        public Rectangle[] SpriteArrayUp { get; set; }
+        public Rectangle[] SpriteArrayIdleUp { get; set; }
+
+        public Rectangle[] SpriteArrayDown { get; set; }
+        public Rectangle[] SpriteArrayIdleDown { get; set; }
+
+
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
 
@@ -34,7 +50,24 @@ namespace GamePrototype.Entities
             set { direction = value; }
         }
 
+        public enum UpdateState
+        {
+            Idle,
+            Movement
+        }
+
+        private UpdateState UpdState;
+        
+        // Properties
+        public string Name { get; set; }
+        public int Health { get; set; }
+        public int Mana { get; set; }
+        public int AttackDamage { get; set; }
+        public int Level { get; set; }
+        public int Type { get; set; }
+
         public BaseEntity() { }
+
 
         public void SetDirectionX(int _direction)
         {

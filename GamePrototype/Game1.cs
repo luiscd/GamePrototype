@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.Linq;
 
 namespace GamePrototype
 {
@@ -23,7 +24,9 @@ namespace GamePrototype
         Player player;
         Camera camera;
 
-        int spriteRadius = 4;
+        ConfigurationFileReader configReader;
+
+        int spriteRadius = 8;
 
         public Game1()
         {
@@ -37,16 +40,21 @@ namespace GamePrototype
         protected override void Initialize()
         {
             spriteSheet = Content.Load<Texture2D>("spriteSheet");
-
+            configReader = new ConfigurationFileReader();
             level.LoadLevel(spriteSheet);
+            var playerEntity = configReader.LoadEntities().FirstOrDefault(entity => entity.Type == 0);
 
             player = new Player()
             {
                 SpriteSheet = spriteSheet,
                 Speed = 0.10f,
                 Direction = new Vector2(1, 1),
-                SpriteRectangle = new Rectangle(0, 8, spriteRadius * 2, spriteRadius * 2),
-                WorldPosition = new Vector2(-spriteRadius, -spriteRadius)
+                WorldPosition = new Vector2(-spriteRadius, -spriteRadius),
+                Name = playerEntity.Name,
+                AttackDamage = playerEntity.AttackDamage,
+                Health = playerEntity.Health,
+                Mana = playerEntity.Mana,
+                Level = 1
             };
 
             camera = new Camera(GraphicsDevice.Viewport, new Vector2(player.WorldPosition.X, player.WorldPosition.Y));

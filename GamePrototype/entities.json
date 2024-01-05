@@ -1,0 +1,23 @@
+[
+  {
+    "Type": 0,
+    "Name": "",
+    "Health": 50,
+    "AttackDamage": 10,
+    "Mana": 10
+  },
+  {
+    "Type": 1,
+    "Name": "Skeleton",
+    "Health": 50,
+    "AttackDamage": 10,
+    "Mana": 10
+  },
+  {
+    "Type": 1,
+    "Name": "Orc",
+    "Health": 80,
+    "AttackDamage": 15,
+    "Mana": 10
+  }
+]

@@ -21,7 +21,7 @@ namespace GamePrototype.Engine
         public Camera(Viewport _viewport, Vector2 _position)
         {
             viewport = _viewport;
-            Zoom = 3.5f;
+            Zoom = 2.5f;
             rotation = 0f;
             position = _position;
         }
