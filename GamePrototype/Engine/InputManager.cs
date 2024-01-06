@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,34 +11,35 @@ namespace GamePrototype.Engine
     public class InputManager
     {
 
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
+        private KeyboardState currentKeyState;
+        private Keys lastKeyPressed;
         private bool isPressed;
 
         public void UpdateState()
         {
-            keyState = Keyboard.GetState();
+            currentKeyState = Keyboard.GetState();
         }
 
         public bool IsKeyDown(Keys key)
         {
             isPressed = true;
-            return keyState.IsKeyDown(key);
+            return currentKeyState.IsKeyDown(key);
         }
 
         public bool IsKeyUp(Keys key)
         {
-            return keyState.IsKeyUp(key);
+            isPressed = false;
+            return currentKeyState.IsKeyUp(key);
         }
 
-        public void SaveLastState()
+        public void SaveLastKeyPressed(Keys key)
         {
-            lastKeyState = keyState;
+            lastKeyPressed = key;
         }
 
-        public bool LastKeyState(Keys key)
+        public bool IsKeyPressedEqual(Keys key)
         {
-            return lastKeyState.IsKeyUp(key);
+            return lastKeyPressed == key;
         }
 
     }

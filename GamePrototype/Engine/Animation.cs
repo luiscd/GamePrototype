@@ -12,7 +12,7 @@ namespace GamePrototype.Engine
 
         public int frameIndex = 0;
         private float timeElapsed;
-        private float timeToUpdate = 0.15f;
+        private float timeToUpdate = 0.20f;
 
         public Animation()
         {

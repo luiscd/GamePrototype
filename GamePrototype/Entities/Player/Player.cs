@@ -18,6 +18,8 @@ namespace GamePrototype.Entities.Player
         private bool isIdle;
         private Rectangle[] spriteArray = new Rectangle[6];
 
+        private KeyboardState previousKeyboardState;
+
         public Player() : base()
         {
             inputManager = new InputManager();
@@ -95,12 +97,12 @@ namespace GamePrototype.Entities.Player
 
         public void Update(GameTime gameTime, Level level)
         {
-            inputManager.UpdateState();
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
+            inputManager.UpdateState();
 
             if (inputManager.IsKeyDown(Keys.Right))
             {
-                inputManager.SaveLastState();
+                inputManager.SaveLastKeyPressed(Keys.Right);
                 spriteArray = SpriteArrayRight;
                 SetDirectionX(1);
 
@@ -113,7 +115,7 @@ namespace GamePrototype.Entities.Player
             }
             else if (inputManager.IsKeyDown(Keys.Left))
             {
-                inputManager.SaveLastState();
+                inputManager.SaveLastKeyPressed(Keys.Left);
                 spriteArray = SpriteArrayRight;
                 SetDirectionX(-1);
 
@@ -128,7 +130,7 @@ namespace GamePrototype.Entities.Player
 
             if (inputManager.IsKeyDown(Keys.Up))
             {
-                inputManager.SaveLastState();
+                inputManager.SaveLastKeyPressed(Keys.Up);
                 spriteArray = SpriteArrayUp;
                 SetDirectionY(-1);
 
@@ -141,7 +143,7 @@ namespace GamePrototype.Entities.Player
             }
             else if (inputManager.IsKeyDown(Keys.Down))
             {
-                inputManager.SaveLastState();
+                inputManager.SaveLastKeyPressed(Keys.Down);
                 spriteArray = SpriteArrayDown;
                 SetDirectionY(1);
 
@@ -149,26 +151,22 @@ namespace GamePrototype.Entities.Player
                 {
                     SetDirectionY(0);
                 }
-
+                
                 CalculateWorldPositionY(deltaTime);
             }
 
-            if (inputManager.LastKeyState(Keys.Right))
+            if (inputManager.IsKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) ||
+                inputManager.IsKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left) )
             {
                 spriteArray = SpriteArrayIdleRight;
             }
 
-            if (inputManager.LastKeyState(Keys.Left))
-            {
-                spriteArray = SpriteArrayIdleRight;
-            }
-
-            if (inputManager.LastKeyState(Keys.Down))
+            if (inputManager.IsKeyPressedEqual(Keys.Down) && inputManager.IsKeyUp(Keys.Down))
             {
                 spriteArray = SpriteArrayIdleDown;
             }
 
-            if (inputManager.LastKeyState(Keys.Up))
+            if (inputManager.IsKeyPressedEqual(Keys.Up) && inputManager.IsKeyUp(Keys.Up))
             {
                 spriteArray = SpriteArrayIdleUp;
             }
@@ -178,10 +176,7 @@ namespace GamePrototype.Entities.Player
 
         public void Draw(SpriteBatch spriteBactch)
         {
-            //spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0.0f, Vector2.Zero, Vector2.Zero, Effect, 0.0f);
-
             spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
-
         }
 
     }
