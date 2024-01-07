@@ -10,7 +10,9 @@ namespace GamePrototype.GameWorld
     {
         private int worldSize;
         private int chunkSize;
+        
 
+        public int TileRadius { get; set; }
         public int WorldWidth { get; set; }
         public int WorldHeight { get; set; }
         private int[,] world;
@@ -21,6 +23,7 @@ namespace GamePrototype.GameWorld
         {
             chunkSize = 16;
             worldSize = 4;
+            TileRadius = 8;
             WorldWidth = chunkSize * worldSize;
             WorldHeight = chunkSize * worldSize;
         }

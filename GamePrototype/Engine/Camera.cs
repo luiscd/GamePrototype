@@ -26,39 +26,41 @@ namespace GamePrototype.Engine
             position = _position;
         }
 
-        public Matrix GetViewMatrix(Vector2 _position, Level _level)
+        public Matrix GetViewMatrix(Player player, Level _level)
         {
             level = _level;
+            Vector2 position = player.WorldPosition;
 
-            //X boundaries of the map
-            int minimumWorldPositionX = (-level.WorldWidth * 4) / 18 * 8;
-            int maximumWorldPositionX = (level.WorldWidth * 4) / 18 * 8;
 
-            //Y boundaries of the map
-            int minimumWorldPositionY = (-level.WorldHeight * 4) / 14 * 8;
-            int maximumWorldPositionY = (level.WorldHeight * 4) / 14 * 8;
+            ////X boundaries of the map
+            //int minimumWorldPositionX = (-level.WorldWidth * 4) / 18 * 8;
+            //int maximumWorldPositionX = (level.WorldWidth * 4) / 18 * 8;
+
+            ////Y boundaries of the map
+            //int minimumWorldPositionY = (-level.WorldHeight * 4) / 14 * 8;
+            //int maximumWorldPositionY = (level.WorldHeight * 4) / 14 * 8;
             
-            if (_position.X <= minimumWorldPositionX)
-            {
-                _position.X = minimumWorldPositionX;
-            }
-            else if (_position.X >= maximumWorldPositionX)
-            {
-                _position.X = maximumWorldPositionX;
-            }
+            //if (_position.X <= minimumWorldPositionX)
+            //{
+            //    _position.X = minimumWorldPositionX;
+            //}
+            //else if (_position.X >= maximumWorldPositionX)
+            //{
+            //    _position.X = maximumWorldPositionX;
+            //}
 
-            if (_position.Y <= minimumWorldPositionY)
-            {
-                _position.Y = minimumWorldPositionY;
-            }
-            else if (_position.Y >= maximumWorldPositionY)
-            {
-                _position.Y = maximumWorldPositionY;
-            }
+            //if (_position.Y <= minimumWorldPositionY)
+            //{
+            //    _position.Y = minimumWorldPositionY;
+            //}
+            //else if (_position.Y >= maximumWorldPositionY)
+            //{
+            //    _position.Y = maximumWorldPositionY;
+            //}
 
             Level.VisibleTiles = BaseTile.Tiles.Where(tile => IsTileInScreen(tile, viewport)).ToList();
 
-            return Matrix.CreateTranslation(new Vector3(-_position, 0f))
+            return Matrix.CreateTranslation(new Vector3(-position, 0f))
              * Matrix.CreateRotationZ(rotation)
              * Matrix.CreateScale(Zoom)
              * Matrix.CreateTranslation(new Vector3(viewport.Width / 2f, viewport.Height / 2f, 0f));

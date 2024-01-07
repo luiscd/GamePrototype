@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using GamePrototype.Engine;
+using GamePrototype.GameWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -57,7 +60,7 @@ namespace GamePrototype.Entities
         }
 
         public SpriteEffects Effect { get; set; }
-        
+
         // Properties
         public string Name { get; set; }
         public int Health { get; set; }
@@ -66,14 +69,12 @@ namespace GamePrototype.Entities
         public int Level { get; set; }
         public int Type { get; set; }
 
-        public BaseEntity() {  }
+        public BaseEntity() { }
 
 
         public void SetDirectionX(int _direction)
         {
             direction.X = _direction;
-            //direction = physics.SetDirectionX(direction, _direction);
-            Effect = direction.X == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
         }
 
         public void SetDirectionY(int _direction)
@@ -99,6 +100,17 @@ namespace GamePrototype.Entities
         public void SetWorldPostionY(int _worldPositionY)
         {
             worldPosition.Y = _worldPositionY;
+        }
+
+
+        public void CalculateWorldBorderX()
+        {
+
+        }
+
+        public void CalculateWordBorderY()
+        {
+
         }
 
     }

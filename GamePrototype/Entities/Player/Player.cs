@@ -104,9 +104,10 @@ namespace GamePrototype.Entities.Player
             {
                 inputManager.SaveLastKeyPressed(Keys.Right);
                 spriteArray = SpriteArrayRight;
+                Effect = SpriteEffects.None;
                 SetDirectionX(1);
 
-                if ((WorldPosition.X / 4) + 2 >= (level.WorldWidth * Direction.X))
+                if (WorldPosition.X >= (level.WorldWidth * level.TileRadius) - level.TileRadius * 4)
                 {
                     SetDirectionX(0);
                 }
@@ -117,9 +118,10 @@ namespace GamePrototype.Entities.Player
             {
                 inputManager.SaveLastKeyPressed(Keys.Left);
                 spriteArray = SpriteArrayRight;
+                Effect = SpriteEffects.FlipHorizontally;
                 SetDirectionX(-1);
 
-                if (WorldPosition.X / 4 <= level.WorldWidth * Direction.X)
+                if (WorldPosition.X <= ((level.WorldWidth * level.TileRadius) * -1) + level.TileRadius * 2)
                 {
                     SetDirectionX(0);
                 }
@@ -127,14 +129,13 @@ namespace GamePrototype.Entities.Player
                 CalculateWorldPositionX(deltaTime);
             }
 
-
             if (inputManager.IsKeyDown(Keys.Up))
             {
                 inputManager.SaveLastKeyPressed(Keys.Up);
                 spriteArray = SpriteArrayUp;
                 SetDirectionY(-1);
 
-                if (WorldPosition.Y / 4 <= level.WorldHeight * Direction.Y)
+                if (WorldPosition.Y <= ((level.WorldHeight * level.TileRadius) * -1) + level.TileRadius)
                 {
                     SetDirectionY(0);
                 }
@@ -147,16 +148,16 @@ namespace GamePrototype.Entities.Player
                 spriteArray = SpriteArrayDown;
                 SetDirectionY(1);
 
-                if (WorldPosition.Y / 4 + 2 >= (level.WorldHeight * Direction.Y))
+                if (WorldPosition.Y >= ((level.WorldHeight * level.TileRadius)) - (level.TileRadius * 4))
                 {
                     SetDirectionY(0);
                 }
-                
+
                 CalculateWorldPositionY(deltaTime);
             }
 
             if (inputManager.IsKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) ||
-                inputManager.IsKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left) )
+                inputManager.IsKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
             {
                 spriteArray = SpriteArrayIdleRight;
             }

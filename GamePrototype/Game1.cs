@@ -80,7 +80,7 @@ namespace GamePrototype
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(player.WorldPosition, level));
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(player, level));
 
             level.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
