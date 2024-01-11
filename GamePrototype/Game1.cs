@@ -71,7 +71,7 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update(gameTime, level);
+            player.Update(gameTime);
             
             base.Update(gameTime);
         }
@@ -90,6 +90,17 @@ namespace GamePrototype
         }
 
 
+        private int GetWorldEdge(int worldSize, int tileRadius, int direction, int ratio)
+        {
+            //WorldPosition.X <= ((level.WorldWidth * level.TileRadius) * -1) + level.TileRadius * 2
+            return (worldSize * tileRadius * direction) + tileRadius * ratio;   //(worldWidth * tileRadius) - level.TileRadius * 4;
+        }
+
+        //private int GetWorldHeightEdge() {f
+        //    //return (level.WorldHeight * level.TileRadius) - level.TileRadius * 4;
+
+
+        //}
 
     }
 }

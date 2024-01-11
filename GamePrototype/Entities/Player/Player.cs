@@ -95,7 +95,7 @@ namespace GamePrototype.Entities.Player
             spriteArray = SpriteArrayIdleDown;
         }
 
-        public void Update(GameTime gameTime, Level level)
+        public void Update(GameTime gameTime)
         {
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
             inputManager.UpdateState();
