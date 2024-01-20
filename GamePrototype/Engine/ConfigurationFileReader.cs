@@ -15,7 +15,7 @@ namespace GamePrototype.Engine
 
         private const string entitiesFile = "entities.json";
         private const string objectsFile = "objects.json";
-
+        
         public ConfigurationFileReader()
         {
             path = Directory.GetCurrentDirectory();
@@ -32,8 +32,8 @@ namespace GamePrototype.Engine
             Objects = JsonConvert.DeserializeObject<List<Objects.Object>>(ReadFromFile(objectsFile));
             return Objects;
         }
-
-        private string ReadFromFile(string file)
+        
+        public string ReadFromFile(string file)
         {
             string jsonData = string.Empty;
 

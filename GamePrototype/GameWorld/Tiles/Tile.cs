@@ -8,16 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GamePrototype.GameWorld.Tiles {
-    public class BaseTile {
+    public class Tile {
 
-        public static List<BaseTile> Tiles = new List<BaseTile>();
+        public static List<Tile> Tiles = new List<Tile>();
+
+
+        private Tile wallTile;
+
         public Rectangle SpriteRectangle { get; set; }
         //public Rectangle TileRectangle { get; set; }
 
         private int tileSize;
         public int TileSize {
             get { return tileSize; }
-            set { tileSize = value; }
+            set { tileSize = 16; }
         }
 
         private Vector2 tilePosition;
@@ -32,7 +36,9 @@ namespace GamePrototype.GameWorld.Tiles {
         public int TileOffsetX { get; set; }
         public int TileOffsetY { get; set; }
 
-        public BaseTile() {
+        public bool IsWalkable { get; set; }
+        
+        public Tile() {
         }
 
         public virtual void Update(GameTime gameTime) {
@@ -41,5 +47,6 @@ namespace GamePrototype.GameWorld.Tiles {
         public virtual void Draw(SpriteBatch spriteBatch) {
             spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White);
         }
+
     }
 }

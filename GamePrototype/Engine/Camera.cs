@@ -14,7 +14,7 @@ namespace GamePrototype.Engine
         private Viewport viewport;
         private float rotation;
         private Vector2 position;
-        private Level level;
+        private Engine engine;
 
         public float Zoom { get; set; } = 3.5f; // Initial zoom level
 
@@ -26,39 +26,39 @@ namespace GamePrototype.Engine
             position = _position;
         }
 
-        public Matrix GetViewMatrix(Player player, Level _level)
+        public Matrix GetViewMatrix(Player player, Engine engine)
         {
-            level = _level;
+            this.engine = engine;
             Vector2 position = player.WorldPosition;
 
 
             ////X boundaries of the map
-            //int minimumWorldPositionX = (-level.WorldWidth * 4) / 18 * 8;
-            //int maximumWorldPositionX = (level.WorldWidth * 4) / 18 * 8;
+            int minimumWorldPositionX = engine.GetWorldEdgeX(-1, 21); 
+            int maximumWorldPositionX = engine.GetWorldEdgeX(1, -21);
 
             ////Y boundaries of the map
-            //int minimumWorldPositionY = (-level.WorldHeight * 4) / 14 * 8;
-            //int maximumWorldPositionY = (level.WorldHeight * 4) / 14 * 8;
-            
-            //if (_position.X <= minimumWorldPositionX)
-            //{
-            //    _position.X = minimumWorldPositionX;
-            //}
-            //else if (_position.X >= maximumWorldPositionX)
-            //{
-            //    _position.X = maximumWorldPositionX;
-            //}
+            int minimumWorldPositionY = engine.GetWorldEdgeY(-1, 15); 
+            int maximumWorldPositionY = engine.GetWorldEdgeY(1, -15);
 
-            //if (_position.Y <= minimumWorldPositionY)
-            //{
-            //    _position.Y = minimumWorldPositionY;
-            //}
-            //else if (_position.Y >= maximumWorldPositionY)
-            //{
-            //    _position.Y = maximumWorldPositionY;
-            //}
+            if (position.X <= minimumWorldPositionX)
+            {
+                position.X = minimumWorldPositionX;
+            }
+            else if (position.X >= maximumWorldPositionX)
+            {
+                position.X = maximumWorldPositionX;
+            }
 
-            Level.VisibleTiles = BaseTile.Tiles.Where(tile => IsTileInScreen(tile, viewport)).ToList();
+            if (position.Y <= minimumWorldPositionY)
+            {
+                position.Y = minimumWorldPositionY;
+            }
+            else if (position.Y >= maximumWorldPositionY)
+            {
+                position.Y = maximumWorldPositionY;
+            }
+
+            Level.VisibleTiles = Tile.Tiles.Where(tile => IsTileInScreen(tile, viewport)).ToList();
 
             return Matrix.CreateTranslation(new Vector3(-position, 0f))
              * Matrix.CreateRotationZ(rotation)
@@ -66,7 +66,7 @@ namespace GamePrototype.Engine
              * Matrix.CreateTranslation(new Vector3(viewport.Width / 2f, viewport.Height / 2f, 0f));
         }
 
-        private static bool IsTileInScreen(BaseTile tile, Viewport viewport)
+        private static bool IsTileInScreen(Tile tile, Viewport viewport)
         {
             Vector2 screenPosition = Vector2.Transform(tile.TilePosition, Transform);
             return (screenPosition.X >= -32 && screenPosition.X < viewport.Width &&

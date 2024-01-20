@@ -11,13 +11,18 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\map.tmx" />
     <None Remove="entities.json" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <None Remove="map.tmx" />
     <None Remove="objects.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="entities.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="map.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="objects.json">

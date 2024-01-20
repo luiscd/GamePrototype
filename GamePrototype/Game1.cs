@@ -19,11 +19,11 @@ namespace GamePrototype
 
         Texture2D spriteSheet;
 
-        Level level = new Level();
+        Level level;
 
         Player player;
         Camera camera;
-
+        Engine.Engine engine;
         ConfigurationFileReader configReader;
 
         int spriteRadius = 8;
@@ -41,7 +41,10 @@ namespace GamePrototype
         {
             spriteSheet = Content.Load<Texture2D>("spriteSheet");
             configReader = new ConfigurationFileReader();
-            level.LoadLevel(spriteSheet);
+            level = new Level(spriteSheet);
+            level.LoadLevel();
+            engine = new Engine.Engine(level);
+
             var playerEntity = configReader.LoadEntities().FirstOrDefault(entity => entity.Type == 0);
 
             player = new Player()
@@ -71,7 +74,7 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update(gameTime);
+            player.Update(gameTime, engine);
             
             base.Update(gameTime);
         }
@@ -80,7 +83,7 @@ namespace GamePrototype
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(player, level));
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(player, engine));
 
             level.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
@@ -89,18 +92,6 @@ namespace GamePrototype
             base.Draw(gameTime);
         }
 
-
-        private int GetWorldEdge(int worldSize, int tileRadius, int direction, int ratio)
-        {
-            //WorldPosition.X <= ((level.WorldWidth * level.TileRadius) * -1) + level.TileRadius * 2
-            return (worldSize * tileRadius * direction) + tileRadius * ratio;   //(worldWidth * tileRadius) - level.TileRadius * 4;
-        }
-
-        //private int GetWorldHeightEdge() {f
-        //    //return (level.WorldHeight * level.TileRadius) - level.TileRadius * 4;
-
-
-        //}
 
     }
 }

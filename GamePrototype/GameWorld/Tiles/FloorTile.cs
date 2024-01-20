@@ -8,11 +8,17 @@ using System.Threading.Tasks;
 
 namespace GamePrototype.GameWorld.Tiles
 {
-    public class FloorTile : BaseTile
+    public class FloorTile : Tile
     {
-        public FloorTile()
-        {
-        }
 
+        public FloorTile(int xOffset, int yOffset, Texture2D spriteSheet, int tileSize, Vector2 position)
+        {
+            TileOffsetX = xOffset;
+            TileOffsetY = yOffset;
+            SpriteSheet = spriteSheet;
+            TilePosition = position;
+            SpriteRectangle = new Rectangle(112, 176, tileSize, tileSize);
+            IsWalkable = true;
+        }
     }
 }
