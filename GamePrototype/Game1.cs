@@ -1,6 +1,7 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld;
+using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,6 +26,7 @@ namespace GamePrototype
         Camera camera;
         Engine.Engine engine;
         ConfigurationFileReader configReader;
+        CollisionHandler collisionHandler;
 
         int spriteRadius = 8;
 
@@ -41,6 +43,7 @@ namespace GamePrototype
         {
             spriteSheet = Content.Load<Texture2D>("spriteSheet");
             configReader = new ConfigurationFileReader();
+            collisionHandler = new CollisionHandler();
             level = new Level(spriteSheet);
             level.LoadLevel();
             engine = new Engine.Engine(level);
@@ -75,7 +78,8 @@ namespace GamePrototype
                 Exit();
 
             player.Update(gameTime, engine);
-            
+            collisionHandler.HandleCollisions(player, Tile.Tiles);
+
             base.Update(gameTime);
         }
 

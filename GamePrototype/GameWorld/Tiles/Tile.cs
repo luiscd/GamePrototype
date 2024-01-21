@@ -48,5 +48,10 @@ namespace GamePrototype.GameWorld.Tiles {
             spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White);
         }
 
+        public float GetBottomBoundary()
+        {
+            return TilePosition.Y + TileSize;
+        }
+
     }
 }

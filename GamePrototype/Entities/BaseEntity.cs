@@ -102,15 +102,9 @@ namespace GamePrototype.Entities
             worldPosition.Y = _worldPositionY;
         }
 
-
-        public void CalculateWorldBorderX()
+        public float GetTopBoundary()
         {
-
-        }
-
-        public void CalculateWordBorderY()
-        {
-
+            return worldPosition.Y;
         }
 
     }

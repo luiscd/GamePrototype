@@ -1,5 +1,6 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.GameWorld;
+using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +13,7 @@ namespace GamePrototype.Entities.Player
         private bool isIdle;
         private Rectangle[] spriteArray = new Rectangle[6];
         private KeyboardState previousKeyboardState;
-        
+
         InputManager inputManager;
         Animation animation;
 
@@ -164,6 +165,13 @@ namespace GamePrototype.Entities.Player
 
             animation.Update(gameTime, spriteArray);
         }
+
+        public bool Intersects(Tile tile)
+        {
+            var intersects = !(GetTopBoundary() < tile.GetBottomBoundary());
+            return intersects && !tile.IsWalkable;
+        }
+
 
         public void Draw(SpriteBatch spriteBactch)
         {
