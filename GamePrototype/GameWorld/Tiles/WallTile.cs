@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 namespace GamePrototype.GameWorld.Tiles
 {
     public class WallTile : Tile
-    {
+    {        
+        //public Rectangle? CollisionBox { get;set; }
+        //public static List<WallTile> Walls = new List<WallTile>();
+
         public WallTile(int xOffset, int yOffset, Texture2D spriteSheet, int tileSize, Vector2 position, int id)
         {
             TileOffsetX = xOffset;
@@ -20,7 +23,6 @@ namespace GamePrototype.GameWorld.Tiles
             SpriteRectangle = GetWallTile(id);
             IsWalkable = false;
         }
-
 
         private Rectangle GetWallTile(int id)
         {

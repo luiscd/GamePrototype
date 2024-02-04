@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using GamePrototype.Engine;
-using GamePrototype.GameWorld;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,8 +22,18 @@ namespace GamePrototype.Entities
         public Rectangle[] SpriteArrayIdleDown { get; set; }
 
 
+        public Rectangle CollisionBox { get; set; }
+
+
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
+
+        private Vector2 lastPosition;
+        public Vector2 LastPosition
+        {
+            get { return lastPosition; }
+            set { lastPosition = value; }
+        }
 
         private Vector2 worldPosition;
         public Vector2 WorldPosition
@@ -52,13 +52,7 @@ namespace GamePrototype.Entities
             get { return direction; }
             set { direction = value; }
         }
-
-        public enum UpdateState
-        {
-            Idle,
-            Movement
-        }
-
+        
         public SpriteEffects Effect { get; set; }
 
         // Properties
@@ -69,8 +63,9 @@ namespace GamePrototype.Entities
         public int Level { get; set; }
         public int Type { get; set; }
 
-        public BaseEntity() { }
-
+        public BaseEntity() {
+            CollisionBox = new Rectangle((int)WorldPosition.X - 4, (int)WorldPosition.Y - 4, 8, 8);
+        }
 
         public void SetDirectionX(int _direction)
         {
@@ -85,27 +80,39 @@ namespace GamePrototype.Entities
         public void CalculateWorldPositionX(double deltaTime)
         {
             worldPosition.X += Speed * (float)deltaTime * Direction.X;
+            CollisionBox = new Rectangle((int)WorldPosition.X + 4, (int)WorldPosition.Y + 4, 8, 8);
         }
 
         public void CalculateWorldPositionY(double deltaTime)
         {
             worldPosition.Y += Speed * (float)deltaTime * Direction.Y;
-        }
-
-        public void SetWorldPositionX(float _worldPositionX)
-        {
-            worldPosition.X = _worldPositionX / 4;
-        }
-
-        public void SetWorldPostionY(int _worldPositionY)
-        {
-            worldPosition.Y = _worldPositionY;
+            CollisionBox = new Rectangle((int)WorldPosition.X + 4, (int)WorldPosition.Y + 4, 8, 8);
         }
 
         public float GetTopBoundary()
         {
-            return worldPosition.Y;
+            return WorldPosition.Y;
         }
 
+        public float GetLeftBoundary()
+        {
+            return WorldPosition.X;
+        }
+
+        public float GetRightBoundary()
+        {
+            return WorldPosition.X + SpriteSize;
+        }
+
+        public float GetBottomBoundary()
+        {
+            return WorldPosition.Y + SpriteSize;
+        }
+
+        public void SetLastPosition()
+        {
+            worldPosition = lastPosition;
+            CollisionBox = new Rectangle((int)WorldPosition.X + 4, (int)WorldPosition.Y + 4, 8, 8);
+        }
     }
 }

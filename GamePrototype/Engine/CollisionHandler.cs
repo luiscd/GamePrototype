@@ -1,4 +1,5 @@
-﻿using GamePrototype.Entities.Player;
+﻿using GamePrototype.Entities;
+using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld.Tiles;
 using System;
 using System.Collections.Generic;
@@ -13,16 +14,31 @@ namespace GamePrototype.Engine
         public CollisionHandler()
         {
         }
-         
-        public void HandleCollisions(Player player, List<Tile> tiles)
+
+        public void HandleCollisionsWorld(BaseEntity entity)
         {
-            foreach (var tile in tiles)
+            var collisionTiles = Tile.Tiles.Where(tile => !tile.IsWalkable && !tile.CollisionBox.IsEmpty);
+            
+            foreach (var tile in collisionTiles)
             {
-                if (player.Intersects(tile))
+                if (entity.CollisionBox.Intersects(tile.CollisionBox))
                 {
-                    player.SetDirectionY(0);
+                    entity.SetLastPosition();
                 }
             }
+        }
+
+        public bool HandleCollisionsEntities(BaseEntity entity)
+        {
+            foreach (var mobEntity in BaseEntity.Entities) 
+            {
+                if (entity.CollisionBox.Intersects(mobEntity.CollisionBox))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }

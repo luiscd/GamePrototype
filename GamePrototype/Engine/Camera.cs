@@ -17,6 +17,7 @@ namespace GamePrototype.Engine
         private Engine engine;
 
         public float Zoom { get; set; } = 3.5f; // Initial zoom level
+        public float UiZoom { get; set; } = 2f;
 
         public Camera(Viewport _viewport, Vector2 _position)
         {
@@ -30,7 +31,6 @@ namespace GamePrototype.Engine
         {
             this.engine = engine;
             Vector2 position = player.WorldPosition;
-
 
             ////X boundaries of the map
             int minimumWorldPositionX = engine.GetWorldEdgeX(-1, 21); 
@@ -64,6 +64,14 @@ namespace GamePrototype.Engine
              * Matrix.CreateRotationZ(rotation)
              * Matrix.CreateScale(Zoom)
              * Matrix.CreateTranslation(new Vector3(viewport.Width / 2f, viewport.Height / 2f, 0f));
+        }
+
+        public Matrix GetViewMatrixUI(Vector2 position)
+        {
+            return Matrix.CreateTranslation(new Vector3(-position, 0f))
+           * Matrix.CreateRotationZ(rotation)
+           * Matrix.CreateScale(UiZoom)
+           * Matrix.CreateTranslation(new Vector3(position, 0f));
         }
 
         private static bool IsTileInScreen(Tile tile, Viewport viewport)

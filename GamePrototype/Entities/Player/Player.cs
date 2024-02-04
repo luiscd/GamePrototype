@@ -1,25 +1,21 @@
 ﻿using GamePrototype.Engine;
-using GamePrototype.GameWorld;
-using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 namespace GamePrototype.Entities.Player
 {
     public class Player : BaseEntity
     {
-        private bool isIdle;
         private Rectangle[] spriteArray = new Rectangle[6];
-        private KeyboardState previousKeyboardState;
-
+        private CollisionHandler collisionHandler;
         InputManager inputManager;
         Animation animation;
 
         public Player() : base()
         {
             inputManager = new InputManager();
+            collisionHandler = new CollisionHandler();
             animation = new Animation();
             Effect = SpriteEffects.None;
             SpriteSize = 16;
@@ -91,13 +87,13 @@ namespace GamePrototype.Entities.Player
             SpriteArrayIdleUp[5] = new Rectangle(272, 80, 16, 16);
 
             spriteArray = SpriteArrayIdleDown;
-
         }
 
-        public void Update(GameTime gameTime, Engine.Engine engine)
+        public void Update(GameTime gameTime)
         {
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
             inputManager.UpdateState();
+            LastPosition = WorldPosition;
 
             if (inputManager.IsKeyDown(Keys.Right))
             {
@@ -105,22 +101,15 @@ namespace GamePrototype.Entities.Player
                 spriteArray = SpriteArrayRight;
                 Effect = SpriteEffects.None;
                 SetDirectionX(1);
-
-                //if (WorldPosition.X >= engine.GetWorldEdgeX((int)Direction.X, -4))
-                //    SetDirectionX(0);
-
                 CalculateWorldPositionX(deltaTime);
             }
-            else if (inputManager.IsKeyDown(Keys.Left))
+
+            if (inputManager.IsKeyDown(Keys.Left))
             {
                 inputManager.SaveLastKeyPressed(Keys.Left);
                 spriteArray = SpriteArrayRight;
                 Effect = SpriteEffects.FlipHorizontally;
                 SetDirectionX(-1);
-
-                //if (WorldPosition.X <= engine.GetWorldEdgeX((int)Direction.X, 1))
-                //    SetDirectionX(0);
-
                 CalculateWorldPositionX(deltaTime);
             }
 
@@ -129,21 +118,14 @@ namespace GamePrototype.Entities.Player
                 inputManager.SaveLastKeyPressed(Keys.Up);
                 spriteArray = SpriteArrayUp;
                 SetDirectionY(-1);
-
-                //if (WorldPosition.Y <= engine.GetWorldEdgeY((int)Direction.Y, 1))
-                //    SetDirectionY(0);
-
                 CalculateWorldPositionY(deltaTime);
             }
-            else if (inputManager.IsKeyDown(Keys.Down))
+
+            if (inputManager.IsKeyDown(Keys.Down))
             {
                 inputManager.SaveLastKeyPressed(Keys.Down);
                 spriteArray = SpriteArrayDown;
                 SetDirectionY(1);
-
-                //if (WorldPosition.Y >= engine.GetWorldEdgeY((int)Direction.Y, -4))
-                //    SetDirectionY(0);
-
                 CalculateWorldPositionY(deltaTime);
             }
 
@@ -163,19 +145,24 @@ namespace GamePrototype.Entities.Player
                 spriteArray = SpriteArrayIdleUp;
             }
 
+            collisionHandler.HandleCollisionsWorld(this);
+
+            if (collisionHandler.HandleCollisionsEntities(this))
+            {
+                CalculateHp();
+            }
+
             animation.Update(gameTime, spriteArray);
         }
 
-        public bool Intersects(Tile tile)
+        private void CalculateHp()
         {
-            var intersects = !(GetTopBoundary() < tile.GetBottomBoundary());
-            return intersects && !tile.IsWalkable;
+             
         }
 
-
-        public void Draw(SpriteBatch spriteBactch)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBactch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            spriteBatch.Draw(SpriteSheet, WorldPosition, spriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
         }
 
     }
