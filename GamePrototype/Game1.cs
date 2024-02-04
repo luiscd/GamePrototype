@@ -49,7 +49,6 @@ namespace GamePrototype
                 Exit();
 
             screen.Update(gameTime);
-            
             base.Update(gameTime);
         }
 
@@ -61,10 +60,8 @@ namespace GamePrototype
             screen.Draw(_spriteBatch);
             _spriteBatch.End();
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrixUI(ui.Position));
-            ui.Draw(_spriteBatch);
-            _spriteBatch.End();
-
+            ui.Draw(_spriteBatch, camera);
+            
             base.Draw(gameTime);
         }
 
