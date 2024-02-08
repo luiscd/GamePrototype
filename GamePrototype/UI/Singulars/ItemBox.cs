@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GamePrototype.UI
+namespace GamePrototype.UI.Singulars
 {
     public class ItemBox
     {

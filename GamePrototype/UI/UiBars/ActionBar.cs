@@ -1,24 +1,22 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using GamePrototype.UI.Singulars;
 
-namespace GamePrototype.UI
+namespace GamePrototype.UI.UiBars
 {
     public class ActionBar
     {
-        private List<ItemBox> items = new List<ItemBox>();
+        private static List<ItemBox> items = new List<ItemBox>();
 
-        public ActionBar(Texture2D spriteSheet) {
-
+        public ActionBar(Texture2D spriteSheet, UI ui)
+        {
             for (int i = 0; i < 5; i++)
             {
                 items.Add(new ItemBox()
                 {
                     SpriteSheet = spriteSheet,
-                    //Position = Position, //new Vector2(Game1.WIDTH / 2 + i * 16, Game1.HEIGHT - 3 * 16),
+                    Position = new Vector2(ui.ActionBarRectangle.Center.X + i * 18 - 2 * 16, ui.ActionBarRectangle.Y + 6),
                     IsSelected = false,
                 });
             }

@@ -1,4 +1,5 @@
 ﻿using GamePrototype.Engine;
+using GamePrototype.UI.UiBars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,16 +13,28 @@ namespace GamePrototype.UI
     public class UI
     {
         private ActionBar actionBar;
+        private PowerUpBar powerUpBar;
+
         private int TileSize = 16;
-        public Vector2 ActionBarPosition { get; set; }
-        private  Vector2 PowerUpPostion { get; set; }
+
+        private Vector2 ActionBarPosition { get; set; }
+        private Vector2 PowerUpPostion { get; set; }
+
+        public Rectangle ActionBarRectangle { get; set; }
+        public Rectangle PowerUpRectangle { get; set; }
+
 
         public UI(Texture2D spriteSheet)
         {
-            ActionBarPosition = new Vector2(0, Game1.HEIGHT - 3 * TileSize);
-            PowerUpPostion = new Vector2(Game1.WIDTH - TileSize * 5, Game1.HEIGHT / 2);
+            ActionBarPosition = new Vector2(0, (int)(Game1.HEIGHT - TileSize * 4));
+            ActionBarRectangle = new Rectangle((int)ActionBarPosition.X, (int)ActionBarPosition.Y, Game1.WIDTH / 2 - 3, TileSize + (TileSize / 2));
+
+            PowerUpPostion = new Vector2(Game1.WIDTH - TileSize * 6, Game1.HEIGHT / 2);
+            PowerUpRectangle = new Rectangle((int)PowerUpPostion.X, (int)PowerUpPostion.Y, TileSize * 2, TileSize * 2);
+
             //Position = new Vector2(100, 100);
-            actionBar = new ActionBar(spriteSheet);
+            actionBar = new ActionBar(spriteSheet, this);
+            powerUpBar = new PowerUpBar(spriteSheet, this);
         }
 
         public void Update(GameTime gameTime)
@@ -33,12 +46,14 @@ namespace GamePrototype.UI
         {
             //Draw ActionBar rectangle
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrixUI(ActionBarPosition));
-            DrawRectangle(spriteBatch, new Rectangle((int)ActionBarPosition.X, (int)ActionBarPosition.Y, Game1.WIDTH / 2 - 3, TileSize), Color.White, 2);
+            //DrawRectangle(spriteBatch, ActionBarRectangle, Color.White, 2);
+            actionBar.Draw(spriteBatch);
             spriteBatch.End();
 
             //Draw PowerUps rectangle
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrixUI(PowerUpPostion));
-            DrawRectangle(spriteBatch, new Rectangle((int)PowerUpPostion.X, (int)PowerUpPostion.Y, TileSize * 2, TileSize * 2), Color.White, 2);
+            DrawRectangle(spriteBatch, PowerUpRectangle, Color.White, 2);
+            powerUpBar.Draw(spriteBatch);
             spriteBatch.End();
 
             //actionBar.Draw(spriteBatch);    
