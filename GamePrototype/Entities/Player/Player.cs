@@ -1,7 +1,10 @@
 ﻿using GamePrototype.Engine;
+using GamePrototype.UI.Singulars;
+using GamePrototype.UI.UiBars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace GamePrototype.Entities.Player
 {
@@ -145,19 +148,30 @@ namespace GamePrototype.Entities.Player
                 spriteArray = SpriteArrayIdleUp;
             }
 
-            collisionHandler.HandleCollisionsWorld(this);
-
-            if (collisionHandler.HandleCollisionsEntities(this))
-            {
-                CalculateHp();
-            }
-
+            CollisionDetection();
             animation.Update(gameTime, spriteArray);
         }
 
         private void CalculateHp()
         {
-             
+
+        }
+
+        private void CollectPowerUp()
+        {
+            PowerUp.PowerUps.RemoveAll(element => element.IsCollided);
+        }
+
+        private void CollisionDetection()
+        {
+            if (collisionHandler.HandleCollisionPowerUps(this))
+                CollectPowerUp();
+
+            if (collisionHandler.HandleCollisionsWorld(this))
+                SetLastPosition();
+
+            if (collisionHandler.HandleCollisionsEntities(this))
+                CalculateHp();
         }
 
         public void Draw(SpriteBatch spriteBatch)

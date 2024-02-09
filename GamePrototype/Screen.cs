@@ -52,6 +52,7 @@ namespace GamePrototype
 
         public void Update(GameTime gameTime)
         {
+            level.Update(gameTime);
             player.Update(gameTime);
         }
 

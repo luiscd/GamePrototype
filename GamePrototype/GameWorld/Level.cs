@@ -1,5 +1,6 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.GameWorld.Tiles;
+using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -50,6 +51,7 @@ namespace GamePrototype.GameWorld
 
             LoadLayerFloor();
             LoadLayerWalls();
+            LoadPowerUps();
         }
 
         private void LoadLayerFloor()
@@ -195,6 +197,23 @@ namespace GamePrototype.GameWorld
             }
         }
 
+        private void LoadPowerUps()
+        {
+            var rand = new Random();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var position = new Vector2(rand.Next(100), rand.Next(100));
+                PowerUp.PowerUps.Add(
+                   new PowerUp()
+                   {
+                       SpriteSheet = spriteSheet,
+                       Position = position,
+                       CollisionBox = new Rectangle((int)position.X,(int)position.Y, 8,8)
+                   });
+            }
+        }
+
         //private static void PopulateWorld(int[,] world, int chunkSize, int worldSize)
         //{
         //    Debug.WriteLine(chunkSize);
@@ -225,11 +244,24 @@ namespace GamePrototype.GameWorld
         //    return position;
         //}
 
+        public void Update(GameTime gameTime)
+        {
+            foreach (var pUp in PowerUp.PowerUps)
+            {
+                pUp.Update(gameTime);
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var tile in VisibleTiles)
             {
                 tile.Draw(spriteBatch);
+            }
+            
+            foreach(var pUp in PowerUp.PowerUps)
+            {
+                pUp.Draw(spriteBatch);
             }
 
             //foreach(var tile in WallTile.Walls)

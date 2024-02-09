@@ -15,7 +15,7 @@ namespace GamePrototype.Engine
         {
         }
 
-        public void HandleCollisionsWorld(BaseEntity entity)
+        public bool HandleCollisionsWorld(BaseEntity entity)
         {
             var collisionTiles = Tile.Tiles.Where(tile => !tile.IsWalkable && !tile.CollisionBox.IsEmpty);
             
@@ -23,9 +23,11 @@ namespace GamePrototype.Engine
             {
                 if (entity.CollisionBox.Intersects(tile.CollisionBox))
                 {
-                    entity.SetLastPosition();
+                    return true;
                 }
             }
+
+            return false;
         }
 
         public bool HandleCollisionsEntities(BaseEntity entity)
@@ -34,6 +36,20 @@ namespace GamePrototype.Engine
             {
                 if (entity.CollisionBox.Intersects(mobEntity.CollisionBox))
                 {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HandleCollisionPowerUps(BaseEntity entity)
+        {
+            foreach (var powerUp in UI.Singulars.PowerUp.PowerUps)
+            {
+                if (entity.CollisionBox.Intersects(powerUp.CollisionBox))
+                {
+                    powerUp.IsCollided = true;
                     return true;
                 }
             }

@@ -1,10 +1,6 @@
 ﻿using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamePrototype.UI.UiBars
 {
@@ -24,9 +20,9 @@ namespace GamePrototype.UI.UiBars
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var item in powerUps)
+            foreach (var powerUp in powerUps)
             {
-                item.Draw(spriteBatch);
+                powerUp.Draw(spriteBatch);
             }
         }
     }
