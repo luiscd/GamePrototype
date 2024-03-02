@@ -11,11 +11,10 @@ namespace GamePrototype.GameWorld.Tiles
     public class FloorTile : Tile
     {
 
-        public FloorTile(int xOffset, int yOffset, Texture2D spriteSheet, int tileSize, Vector2 position)
+        public FloorTile(int xOffset, int yOffset, int tileSize, Vector2 position)
         {
             TileOffsetX = xOffset;
             TileOffsetY = yOffset;
-            SpriteSheet = spriteSheet;
             TilePosition = position;
             SpriteRectangle = new Rectangle(112, 176, tileSize, tileSize);
             IsWalkable = true;

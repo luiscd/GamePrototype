@@ -13,11 +13,10 @@ namespace GamePrototype.GameWorld.Tiles
         //public Rectangle? CollisionBox { get;set; }
         //public static List<WallTile> Walls = new List<WallTile>();
 
-        public WallTile(int xOffset, int yOffset, Texture2D spriteSheet, int tileSize, Vector2 position, int id)
+        public WallTile(int xOffset, int yOffset, int tileSize, Vector2 position, int id)
         {
             TileOffsetX = xOffset;
             TileOffsetY = yOffset;
-            SpriteSheet = spriteSheet;
             TilePosition = position;
             TileSize = tileSize;
             SpriteRectangle = GetWallTile(id);

@@ -1,6 +1,7 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities.Mob;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,15 +14,19 @@ namespace GamePrototype
 
         public static int WIDTH = 1024;
         public static int HEIGHT = 768;
+        public static ContentManager _Content;
 
-        Texture2D spriteSheet;
+        //Texture2D spriteSheet;
+
+        double frameRate = 0.0;
 
         Screen screen;
         UI.UI ui;
         Camera camera;
-        
+                
         public Game1()
         {
+            _Content = Content;
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
@@ -31,9 +36,8 @@ namespace GamePrototype
 
         protected override void Initialize()
         {
-            spriteSheet = Content.Load<Texture2D>("spriteSheet");
-            screen = new Screen(spriteSheet);
-            ui = new UI.UI(spriteSheet);
+            screen = new Screen();
+            ui = new UI.UI(Content);
             camera = new Camera(GraphicsDevice.Viewport, new Vector2(screen.player.WorldPosition.X, screen.player.WorldPosition.Y));
             base.Initialize();
         }
@@ -48,20 +52,24 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.F))
+                screen.LoadMob();
+
             screen.Update(gameTime);
+            ui.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            
+
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(screen.player, screen.engine));
             screen.Draw(_spriteBatch);
             _spriteBatch.End();
 
             ui.Draw(_spriteBatch, camera);
-            
+
             base.Draw(gameTime);
         }
 

@@ -28,7 +28,12 @@ namespace GamePrototype.UI.Singulars
 
         public PowerUp()
         {
-            animation = new Animation();
+            animation = new Animation()
+            {
+                TimeToUpdate = 0.20f
+            };
+
+            SpriteSheet = GlobalVariables.LoadSpriteSheet();
 
             SpriteArray = new Rectangle[6];
             SpriteArray[0] = new Rectangle(16, 208, 16, 16);
@@ -47,9 +52,6 @@ namespace GamePrototype.UI.Singulars
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(SpriteSheet, Position, SpriteArray[animation.frameIndex], Color.White);
-
-
-            //spriteBatch.Draw(SpriteSheet, Position, SpriteArray[animation.frameIndex], Color.White);
         }
 
     }

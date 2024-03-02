@@ -11,8 +11,9 @@ namespace GamePrototype.Engine
     {
 
         public int frameIndex = 0;
+        public bool isAnimationFinished = false;
         private float timeElapsed;
-        private float timeToUpdate = 0.20f;
+        public float TimeToUpdate { get; set; } /*= 0.20f;*/
 
         public Animation()
         {
@@ -22,9 +23,9 @@ namespace GamePrototype.Engine
         {
             timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (timeElapsed > timeToUpdate)
+            if (timeElapsed > TimeToUpdate)
             {
-                timeElapsed -= timeToUpdate;
+                timeElapsed -= TimeToUpdate;
 
                 if (frameIndex < spriteArray.Length - 1)
                 {
@@ -33,6 +34,7 @@ namespace GamePrototype.Engine
                 else
                 {
                     frameIndex = 0;
+                    isAnimationFinished = true;
                 }
             }
         }

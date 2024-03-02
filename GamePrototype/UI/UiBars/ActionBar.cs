@@ -9,13 +9,12 @@ namespace GamePrototype.UI.UiBars
     {
         private static List<ItemBox> items = new List<ItemBox>();
 
-        public ActionBar(Texture2D spriteSheet, UI ui)
+        public ActionBar( UI ui)
         {
             for (int i = 0; i < 5; i++)
             {
                 items.Add(new ItemBox()
                 {
-                    SpriteSheet = spriteSheet,
                     Position = new Vector2(ui.ActionBarRectangle.Center.X + i * 18 - 2 * 16, ui.ActionBarRectangle.Y + 6),
                     IsSelected = false,
                 });

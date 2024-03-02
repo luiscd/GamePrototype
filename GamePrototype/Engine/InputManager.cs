@@ -37,7 +37,7 @@ namespace GamePrototype.Engine
             lastKeyPressed = key;
         }
 
-        public bool IsKeyPressedEqual(Keys key)
+        public bool IsLastKeyPressedEqual(Keys key)
         {
             return lastKeyPressed == key;
         }

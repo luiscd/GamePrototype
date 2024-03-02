@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GamePrototype.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace GamePrototype.UI.Singulars
 
         public ItemBox()
         {
+            SpriteSheet = GlobalVariables.LoadSpriteSheet();
             TileSize = 16;
             Sprite = new Rectangle(0, 208, TileSize, TileSize);
         }

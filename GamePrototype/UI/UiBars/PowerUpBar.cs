@@ -8,7 +8,7 @@ namespace GamePrototype.UI.UiBars
     {
         private static List<PowerUp> powerUps = new List<PowerUp>();
 
-        public PowerUpBar(Texture2D spriteSheet, UI ui)
+        public PowerUpBar(UI ui)
         {
 
         }

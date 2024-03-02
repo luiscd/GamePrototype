@@ -11,6 +11,9 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Entities\Actions\Movement.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Content\map.tmx" />
     <None Remove="entities.json" />
     <None Remove="Icon.ico" />

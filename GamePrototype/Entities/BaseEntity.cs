@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GamePrototype.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,24 +12,20 @@ namespace GamePrototype.Entities
 
         public Rectangle[] SpriteArrayRight { get; set; }
         public Rectangle[] SpriteArrayIdleRight { get; set; }
-
         public Rectangle[] SpriteArrayLeft { get; set; }
         public Rectangle[] SpriteArrayIdleLeft { get; set; }
-
         public Rectangle[] SpriteArrayUp { get; set; }
         public Rectangle[] SpriteArrayIdleUp { get; set; }
-
         public Rectangle[] SpriteArrayDown { get; set; }
         public Rectangle[] SpriteArrayIdleDown { get; set; }
-
+        public Rectangle[] SpriteArrayDie { get; set; }
 
         public Rectangle CollisionBox { get; set; }
-
-
+        public bool IsDead { get; set; }
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
-
         private Vector2 lastPosition;
+
         public Vector2 LastPosition
         {
             get { return lastPosition; }
@@ -44,7 +41,6 @@ namespace GamePrototype.Entities
 
         public Texture2D SpriteSheet { get; set; }
         public float Speed { get; set; }
-        public int Hp { get; set; }
 
         private Vector2 direction;
         public Vector2 Direction
@@ -52,7 +48,7 @@ namespace GamePrototype.Entities
             get { return direction; }
             set { direction = value; }
         }
-        
+
         public SpriteEffects Effect { get; set; }
 
         // Properties
@@ -63,8 +59,17 @@ namespace GamePrototype.Entities
         public int Level { get; set; }
         public int Type { get; set; }
 
-        public BaseEntity() {
+        public Rectangle[] SpriteArray { get; set; }
+
+        public BaseEntity()
+        {
+            SpriteSheet = GlobalVariables.LoadSpriteSheet();
             CollisionBox = new Rectangle((int)WorldPosition.X - 4, (int)WorldPosition.Y - 4, 8, 8);
+        }
+
+        public void SetDefaultDirection()
+        {
+            Direction = Vector2.Zero;
         }
 
         public void SetDirectionX(int _direction)
@@ -75,6 +80,11 @@ namespace GamePrototype.Entities
         public void SetDirectionY(int _direction)
         {
             direction.Y = _direction;
+        }
+
+        public void TakeDmg(int attackDmg)
+        {
+            Health = Health - attackDmg;
         }
 
         public void CalculateWorldPositionX(double deltaTime)
@@ -109,10 +119,49 @@ namespace GamePrototype.Entities
             return WorldPosition.Y + SpriteSize;
         }
 
+        public void MoveRight(double deltaTime)
+        {
+            SpriteArray = SpriteArrayRight;
+            Effect = SpriteEffects.None;
+            SetDirectionX(1);
+            SetDirectionY(0);
+            CalculateWorldPositionX(deltaTime);
+        }
+
+        public void MoveLeft(double deltaTime)
+        {
+            SpriteArray = SpriteArrayRight;
+            Effect = SpriteEffects.FlipHorizontally;
+            SetDirectionX(-1);
+            SetDirectionY(0);
+            CalculateWorldPositionX(deltaTime);
+        }
+
+        public void MoveUp(double deltaTime)
+        {
+            SpriteArray = SpriteArrayUp;
+            SetDirectionX(0);
+            SetDirectionY(-1);
+            CalculateWorldPositionY(deltaTime);
+        }
+
+        public void MoveDown(double deltaTime)
+        {
+            SpriteArray = SpriteArrayDown;
+            SetDirectionX(0);
+            SetDirectionY(1);
+            CalculateWorldPositionY(deltaTime);
+        }
+
         public void SetLastPosition()
         {
             worldPosition = lastPosition;
             CollisionBox = new Rectangle((int)WorldPosition.X + 4, (int)WorldPosition.Y + 4, 8, 8);
+        }
+
+        public bool IsDeadMethod()
+        {
+            return Health < 1;
         }
     }
 }

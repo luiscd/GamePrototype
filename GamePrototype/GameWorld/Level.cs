@@ -25,11 +25,10 @@ namespace GamePrototype.GameWorld
         public int WorldHeight { get; set; }
         public static List<Tile> VisibleTiles = new List<Tile>();
 
-        private Texture2D spriteSheet;
         private int xOffset;
         private int yOffset;
 
-        public Level(Texture2D spriteSheet)
+        public Level()
         {
             chunkSize = 16;
             worldSize = 4;
@@ -37,7 +36,6 @@ namespace GamePrototype.GameWorld
             TileRadius = 8;
             WorldWidth = chunkSize * worldSize;
             WorldHeight = chunkSize * worldSize;
-            this.spriteSheet = spriteSheet;
         }
 
         public void LoadLevel()
@@ -60,7 +58,7 @@ namespace GamePrototype.GameWorld
             {
                 for (int j = 0; j < layers[0].GetLength(1); j++)
                 {
-                    Tile.Tiles.Add(new FloorTile(xOffset, yOffset, spriteSheet, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset)));
+                    Tile.Tiles.Add(new FloorTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset)));
                 }
             }
         }
@@ -68,7 +66,6 @@ namespace GamePrototype.GameWorld
         private void LoadLayerWalls()
         {
             Vector2 position = Vector2.Zero;
-            Rectangle collisionBox = new Rectangle();
 
             for (int i = 0; i < layers[1].GetLength(0); i++)
             {
@@ -77,91 +74,83 @@ namespace GamePrototype.GameWorld
                     var value = layers[1][i, j];
 
                     if (value == 1)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 1));
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 1));
 
                     if (value == 2)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 2));
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 2));
 
                     if (value == 6)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 3));
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 3));
 
                     if (value == 25)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 4)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 4)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8)
                         });
                     }
 
                     if (value == 26)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 5)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 5)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8)
                         });
                     }
 
                     if (value == 30)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 6)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 6)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16)
                         });
                     }
 
                     if (value == 97)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 7)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 7)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16)
                         });
                     }
 
                     if (value == 102)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X + 8, (int)position.Y, 8, 16);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 8)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 8)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X + 8, (int)position.Y, 8, 16)
                         });
                     }
 
                     if (value == 121)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 9)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 9)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
                         });
                     }
 
                     if (value == 122)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 10)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 10)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
                         });
                     }
 
                     if (value == 126)
                     {
                         position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        collisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, spriteSheet, tileSize, position, 11)
+                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 11)
                         {
-                            CollisionBox = collisionBox
+                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
                         });
                     }
                 }
@@ -207,9 +196,8 @@ namespace GamePrototype.GameWorld
                 PowerUp.PowerUps.Add(
                    new PowerUp()
                    {
-                       SpriteSheet = spriteSheet,
                        Position = position,
-                       CollisionBox = new Rectangle((int)position.X,(int)position.Y, 8,8)
+                       CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 8)
                    });
             }
         }
@@ -258,8 +246,8 @@ namespace GamePrototype.GameWorld
             {
                 tile.Draw(spriteBatch);
             }
-            
-            foreach(var pUp in PowerUp.PowerUps)
+
+            foreach (var pUp in PowerUp.PowerUps)
             {
                 pUp.Draw(spriteBatch);
             }

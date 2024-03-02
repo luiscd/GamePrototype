@@ -1,6 +1,9 @@
 ﻿using GamePrototype.Entities;
+using GamePrototype.Entities.Actions;
+using GamePrototype.Entities.Mob;
 using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld.Tiles;
+using GamePrototype.UI.Singulars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +21,7 @@ namespace GamePrototype.Engine
         public bool HandleCollisionsWorld(BaseEntity entity)
         {
             var collisionTiles = Tile.Tiles.Where(tile => !tile.IsWalkable && !tile.CollisionBox.IsEmpty);
-            
+
             foreach (var tile in collisionTiles)
             {
                 if (entity.CollisionBox.Intersects(tile.CollisionBox))
@@ -30,17 +33,15 @@ namespace GamePrototype.Engine
             return false;
         }
 
-        public bool HandleCollisionsEntities(BaseEntity entity)
+        public void HandleCollisionsEntities(BaseEntity entity)
         {
-            foreach (var mobEntity in BaseEntity.Entities) 
+            foreach (var mobEntity in BaseEntity.Entities)
             {
                 if (entity.CollisionBox.Intersects(mobEntity.CollisionBox))
                 {
-                    return true;
+                    entity.TakeDmg(mobEntity.AttackDamage);
                 }
             }
-
-            return false;
         }
 
         public bool HandleCollisionPowerUps(BaseEntity entity)
@@ -57,5 +58,16 @@ namespace GamePrototype.Engine
             return false;
         }
 
+
+        public void HandleAttackCollision(Attack attack)
+        {
+            foreach (var mobEntity in Mob.Mobs)
+            {
+                if (attack.CollisionBox.Intersects(mobEntity.CollisionBox))
+                {
+                    mobEntity.HandleHit();
+                }
+            }
+        }
     }
 }

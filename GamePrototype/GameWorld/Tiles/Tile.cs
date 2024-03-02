@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GamePrototype.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,7 @@ namespace GamePrototype.GameWorld.Tiles
 
         public Tile()
         {
+            SpriteSheet = GlobalVariables.LoadSpriteSheet();
         }
 
         public virtual void Update(GameTime gameTime)
