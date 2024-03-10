@@ -3,11 +3,9 @@ using GamePrototype.Entities.Actions;
 using GamePrototype.Entities.Mob;
 using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld;
+using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace GamePrototype
@@ -33,7 +31,7 @@ namespace GamePrototype
             player = new Player()
             {
                 //SpriteSheet = spriteSheet,
-                Speed = 0.10f,
+                Speed = 0.12f,
                 Direction = new Vector2(0, 0),
                 WorldPosition = new Vector2(-spriteRadius, -spriteRadius),
                 Name = playerEntity.Name,
@@ -49,31 +47,32 @@ namespace GamePrototype
         public void LoadMob()
         {
             var mobEntity = engine.configReader.LoadEntities().FirstOrDefault(e => e.Type == 1);
-            for (int i = 0; i < 2; i++)
+            //for (int i = 0; i < 2; i++)
+            //{
+            Mob.Mobs.Add(new Phantom()
             {
-                Mob.Mobs.Add(new Phantom()
-                {
-                    Speed = 0.05f,
-                    Direction = new Vector2(0, 0),
-                    WorldPosition = new Vector2(0, 0),
-                    Name = mobEntity.Name,
-                    AttackDamage = mobEntity.AttackDamage,
-                    Health = mobEntity.Health,
-                    Mana = mobEntity.Mana,
-                    Level = 1
-                });
+                Speed = 0.05f,
+                Direction = new Vector2(0, 0),
+                WorldPosition = new Vector2(0, 0),
+                Name = mobEntity.Name,
+                AttackDamage = mobEntity.AttackDamage,
+                Health = mobEntity.Health,
+                Mana = mobEntity.Mana,
+                Level = 1
+            });
 
-                Mob.Mobs.Add(new Spider() {
-                    Speed = 0.05f,
-                    Direction = new Vector2(0, 0),
-                    WorldPosition = new Vector2(0, 0),
-                    Name = mobEntity.Name,
-                    AttackDamage = mobEntity.AttackDamage,
-                    Health = mobEntity.Health,
-                    Mana = mobEntity.Mana,
-                    Level = 1
-                });
-            }
+            //Mob.Mobs.Add(new Spider()
+            //{
+            //    Speed = 0.05f,
+            //    Direction = new Vector2(0, 0),
+            //    WorldPosition = new Vector2(0, 0),
+            //    Name = mobEntity.Name,
+            //    AttackDamage = mobEntity.AttackDamage,
+            //    Health = mobEntity.Health,
+            //    Mana = mobEntity.Mana,
+            //    Level = 1
+            //});
+            //}
         }
 
         public void Update(GameTime gameTime)
@@ -101,7 +100,6 @@ namespace GamePrototype
                 die?.Update(gameTime);
                 if (!die.IsAnimationPlaying)
                     die = null;
-
             }
 
             Mob.Mobs.RemoveAll(entity => entity.IsDead);
@@ -112,8 +110,10 @@ namespace GamePrototype
             level.Draw(spriteBatch);
             player.Draw(spriteBatch);
 
-            foreach (var phantom in Mob.Mobs)
-                phantom.Draw(spriteBatch);
+            foreach (var mob in Mob.Mobs)
+            {
+                mob.Draw(spriteBatch);
+            }
 
             die?.Draw(spriteBatch);
         }

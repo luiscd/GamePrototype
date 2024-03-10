@@ -25,9 +25,9 @@ namespace GamePrototype.Entities.Mob
             //
             SpriteArrayMovement = new Rectangle[4];
             SpriteArrayMovement[0] = new Rectangle(288, 80, SpriteSize, SpriteSize);
-            SpriteArrayMovement[1] = new Rectangle(288, 80, SpriteSize, SpriteSize);
-            SpriteArrayMovement[2] = new Rectangle(288, 80, SpriteSize, SpriteSize);
-            SpriteArrayMovement[3] = new Rectangle(288, 80, SpriteSize, SpriteSize);
+            SpriteArrayMovement[1] = new Rectangle(304, 80, SpriteSize, SpriteSize);
+            SpriteArrayMovement[2] = new Rectangle(320, 80, SpriteSize, SpriteSize);
+            SpriteArrayMovement[3] = new Rectangle(336, 80, SpriteSize, SpriteSize);
 
             SpriteArray = SpriteArrayIdle;
 
@@ -44,14 +44,14 @@ namespace GamePrototype.Entities.Mob
             //Die animation
             //
             SpriteArrayDie = new Rectangle[8];
-            SpriteArrayDie[0] = new Rectangle(288, 48, 16, 16);
-            SpriteArrayDie[1] = new Rectangle(304, 48, 16, 16);
-            SpriteArrayDie[2] = new Rectangle(320, 48, 16, 16);
-            SpriteArrayDie[3] = new Rectangle(336, 48, 16, 16);
-            SpriteArrayDie[4] = new Rectangle(352, 48, 16, 16);
-            SpriteArrayDie[5] = new Rectangle(368, 48, 16, 16);
-            SpriteArrayDie[6] = new Rectangle(384, 48, 16, 16);
-            SpriteArrayDie[7] = new Rectangle(400, 48, 16, 16);
+            SpriteArrayDie[0] = new Rectangle(352, 80, 16, 16);
+            SpriteArrayDie[1] = new Rectangle(368, 80, 16, 16);
+            SpriteArrayDie[2] = new Rectangle(384, 80, 16, 16);
+            SpriteArrayDie[3] = new Rectangle(400, 80, 16, 16);
+            SpriteArrayDie[4] = new Rectangle(416, 80, 16, 16);
+            SpriteArrayDie[5] = new Rectangle(432, 80, 16, 16);
+            SpriteArrayDie[6] = new Rectangle(448, 80, 16, 16);
+            SpriteArrayDie[7] = new Rectangle(464, 80, 16, 16);
         }
         
     }

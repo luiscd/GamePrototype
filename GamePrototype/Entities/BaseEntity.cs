@@ -22,6 +22,8 @@ namespace GamePrototype.Entities
 
         public Rectangle CollisionBox { get; set; }
         public bool IsDead { get; set; }
+        public bool IsHit { get; set; }
+
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
         private Vector2 lastPosition;

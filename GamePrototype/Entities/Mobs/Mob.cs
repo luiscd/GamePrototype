@@ -3,6 +3,7 @@ using GamePrototype.Entities.Actions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GamePrototype.Entities.Mob
@@ -16,11 +17,13 @@ namespace GamePrototype.Entities.Mob
         public Animation animation;
         CollisionHandler collisionHandler;
         GameTime gameTime;
+        public Hit hit;
 
         public Rectangle[] SpriteArrayIdle { get; set; }
         public Rectangle[] SpriteArrayMovement { get; set; }
 
         public Rectangle[] SpriteArrayHit { get; set; }
+
 
         public Mob()
         {
@@ -37,21 +40,68 @@ namespace GamePrototype.Entities.Mob
             this.gameTime = gameTime;
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            animation.Update(this.gameTime, SpriteArray);
+            LastPosition = WorldPosition;
 
             RandomMovement();
+
             CalculateWorldPositionX(deltaTime);
             CalculateWorldPositionY(deltaTime);
+
             CollisionHandle();
-            ResetSprite();
+
+            if (IsHit)
+            {
+                HandleHitAction();
+            }
+            else
+            {
+                animation.Update(this.gameTime, SpriteArray);
+            }
 
             if (IsDeadMethod())
+            {
                 IsDead = true;
+                DropXp();
+                DropLoot();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            if (!animation.IsPaused)
+            {
+                spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            }
+
+            if (animation.IsPaused) {
+                hit.Draw(spriteBatch);
+            }
+        }
+
+        private void HandleHitAction()
+        {
+            if (hit == null)
+            {
+                hit = new Hit()
+                {
+                    Position = WorldPosition,
+                    SpriteEffect = Effect,
+                    SpriteArray = SpriteArrayHit
+                };
+
+                animation.Stop();
+                TakeDamage(2);
+            }
+
+            hit.Update(gameTime);
+
+            if (!hit.IsAnimationPlaying)
+            {
+                hit = null;
+                IsHit = false;
+                animation.Resume();
+            }
+
         }
 
         private void CollisionHandle()
@@ -60,13 +110,9 @@ namespace GamePrototype.Entities.Mob
                 SetLastPosition();
         }
 
-        private void ResetSprite()
+        private void ChasePlayer()
         {
-            if (animation.frameIndex == SpriteArray.Length - 1)
-            {
-                animation.frameIndex = 0;
-                SpriteArray = SpriteArrayIdle;
-            }
+
         }
 
         private void RandomMovement()
@@ -75,8 +121,9 @@ namespace GamePrototype.Entities.Mob
 
             if (actionLocker == 120)
             {
-                Random random = new Random();
+                Random random = new();
                 int randomValue = random.Next(100);
+                SpriteArray = SpriteArrayMovement;
 
                 if (randomValue <= 25)
                 {
@@ -108,13 +155,18 @@ namespace GamePrototype.Entities.Mob
             }
         }
 
-        public void HandleHit()
+        private void ResetSprite()
         {
-            SpriteArray = SpriteArrayHit;
-            TakeDamage(2);
+            if (animation.IsAnimationFinished)
+            {
+                IsHit = false;
+                animation.FrameIndex = 0;
+                animation.TimeToUpdate = 0.20f;
+                SpriteArray = SpriteArrayIdle;
+            }
         }
 
-        private void TakeDamage(int attackDmg)
+        public void TakeDamage(int attackDmg)
         {
             Health -= attackDmg;
         }
@@ -124,5 +176,9 @@ namespace GamePrototype.Entities.Mob
 
         }
 
+        private void DropXp()
+        {
+
+        }
     }
 }

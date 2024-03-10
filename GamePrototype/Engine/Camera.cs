@@ -3,6 +3,7 @@ using GamePrototype.GameWorld;
 using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -35,7 +36,7 @@ namespace GamePrototype.Engine
         public Matrix GetViewMatrix(Player _player, Engine _engine)
         {
             engine = _engine;
-            Vector2 position = _player.WorldPosition;
+            position = _player.WorldPosition;
             SetWorldBoundaries();
             position = CalculateWorldBoundaries(position);
                         
@@ -55,11 +56,23 @@ namespace GamePrototype.Engine
            * Matrix.CreateTranslation(new Vector3(position, 0f));
         }
 
-        private static bool IsTileInScreen(Tile tile, Viewport viewport)
+        private bool IsTileInScreen(Tile tile, Viewport viewport)
         {
-            Vector2 screenPosition = Vector2.Transform(tile.TilePosition, Transform);
-            return (screenPosition.X >= -32 && screenPosition.X < viewport.Width &&
-                    screenPosition.Y >= -32 && screenPosition.Y < viewport.Height);
+            Vector2 screenPosition = tile.TilePosition;
+            Vector2 playerPosition = position;
+            Vector2 relativePosition = screenPosition - playerPosition;
+
+            float visibleRangeX = viewport.Width / 5f; 
+            float visibleRangeY = viewport.Height / 5f; 
+
+            if (Math.Abs(relativePosition.X) <= visibleRangeX && Math.Abs(relativePosition.Y) <= visibleRangeY)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void SetWorldBoundaries()

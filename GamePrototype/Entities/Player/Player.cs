@@ -187,7 +187,6 @@ namespace GamePrototype.Entities.Player
                     attack = null;
                 }
             }
-
         }
 
         private void CollectPowerUp()
@@ -199,21 +198,20 @@ namespace GamePrototype.Entities.Player
         private void CollisionDetection()
         {
             collisionHandler.HandleCollisionsEntities(this);
-
-            if (collisionHandler.HandleCollisionPowerUps(this))
+            
+            if (collisionHandler.HandleCollisionPowerUps(this)) 
                 CollectPowerUp();
-
-            if (collisionHandler.HandleCollisionsWorld(this))
+    
+            if (collisionHandler.HandleCollisionsWorld(this)) 
                 SetLastPosition();
-
-            if (attack != null)
+            
+            if (attack != null) 
                 collisionHandler.HandleAttackCollision(attack);
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
             attack?.Draw(spriteBatch);
         }
     }

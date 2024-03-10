@@ -39,13 +39,13 @@ namespace GamePrototype.Entities.Actions
         {
             animation.Update(gameTime, SpriteArray);
 
-            if (animation.isAnimationFinished)
+            if (animation.IsAnimationFinished)
                 IsAnimationPlaying = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spriteSheet, Position, SpriteArray[animation.frameIndex], Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0.0f);
+            spriteBatch.Draw(spriteSheet, Position, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, spriteEffect, 0.0f);
         }
     }
 }

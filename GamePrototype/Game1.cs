@@ -18,8 +18,6 @@ namespace GamePrototype
 
         //Texture2D spriteSheet;
 
-        double frameRate = 0.0;
-
         Screen screen;
         UI.UI ui;
         Camera camera;
@@ -37,7 +35,7 @@ namespace GamePrototype
         protected override void Initialize()
         {
             screen = new Screen();
-            ui = new UI.UI(Content);
+            ui = new UI.UI();
             camera = new Camera(GraphicsDevice.Viewport, new Vector2(screen.player.WorldPosition.X, screen.player.WorldPosition.Y));
             base.Initialize();
         }
@@ -52,9 +50,6 @@ namespace GamePrototype
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F))
-                screen.LoadMob();
-
             screen.Update(gameTime);
             ui.Update(gameTime);
             base.Update(gameTime);
@@ -62,8 +57,7 @@ namespace GamePrototype
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-
+            GraphicsDevice.Clear(Color.Black);           
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(screen.player, screen.engine));
             screen.Draw(_spriteBatch);
             _spriteBatch.End();

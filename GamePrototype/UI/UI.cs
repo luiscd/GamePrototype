@@ -30,9 +30,8 @@ namespace GamePrototype.UI
         private int frameCounter = 0;
         private float elapsedTime = 0;
         private int currentFPS = 0;
-        private SpriteFont font;
-
-        public UI(ContentManager Content)
+        
+        public UI()
         {
             ActionBarPosition = new Vector2(0, (int)(Game1.HEIGHT - TileSize * 4));
             ActionBarRectangle = new Rectangle((int)ActionBarPosition.X, (int)ActionBarPosition.Y, Game1.WIDTH / 2 - 3, TileSize + (TileSize / 2));
@@ -42,7 +41,6 @@ namespace GamePrototype.UI
 
             actionBar = new ActionBar(this);
             powerUpBar = new PowerUpBar(this);
-            font = Content.Load<SpriteFont>("Font");
         }
 
         public void Update(GameTime gameTime)

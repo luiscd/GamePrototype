@@ -51,7 +51,7 @@ namespace GamePrototype.UI.Singulars
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, Position, SpriteArray[animation.frameIndex], Color.White);
+            spriteBatch.Draw(SpriteSheet, Position, SpriteArray[animation.FrameIndex], Color.White);
         }
 
     }

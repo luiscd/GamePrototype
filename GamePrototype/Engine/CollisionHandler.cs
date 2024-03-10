@@ -1,14 +1,9 @@
 ﻿using GamePrototype.Entities;
 using GamePrototype.Entities.Actions;
 using GamePrototype.Entities.Mob;
-using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld.Tiles;
 using GamePrototype.UI.Singulars;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamePrototype.Engine
 {
@@ -46,7 +41,7 @@ namespace GamePrototype.Engine
 
         public bool HandleCollisionPowerUps(BaseEntity entity)
         {
-            foreach (var powerUp in UI.Singulars.PowerUp.PowerUps)
+            foreach (var powerUp in PowerUp.PowerUps)
             {
                 if (entity.CollisionBox.Intersects(powerUp.CollisionBox))
                 {
@@ -64,8 +59,8 @@ namespace GamePrototype.Engine
             foreach (var mobEntity in Mob.Mobs)
             {
                 if (attack.CollisionBox.Intersects(mobEntity.CollisionBox))
-                {
-                    mobEntity.HandleHit();
+                {                    
+                    mobEntity.IsHit = true;
                 }
             }
         }
