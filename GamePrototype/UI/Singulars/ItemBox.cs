@@ -16,17 +16,22 @@ namespace GamePrototype.UI.Singulars
         public Vector2 Position { get; set; }
         public int TileSize { get; set; }
         public Rectangle Sprite { get; set; }
+        public Rectangle SelectedSprite { get; set; }
+        public bool IsFree { get; set; }    
+        public int Dmg { get; set; }
 
         public ItemBox()
         {
             SpriteSheet = GlobalVariables.LoadSpriteSheet();
             TileSize = 16;
             Sprite = new Rectangle(0, 208, TileSize, TileSize);
+            SelectedSprite = new Rectangle(0, 224, TileSize, TileSize);
+            IsFree = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, Position, Sprite, Color.White);
+            spriteBatch.Draw(SpriteSheet, Position, IsSelected ? SelectedSprite : Sprite, Color.White);
         }
     }
 }

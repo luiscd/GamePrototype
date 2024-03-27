@@ -1,10 +1,12 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities.Actions;
+using GamePrototype.Entities.Player;
+using GamePrototype.UI.UiBars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GamePrototype.Entities.Mob
 {
@@ -21,7 +23,6 @@ namespace GamePrototype.Entities.Mob
 
         public Rectangle[] SpriteArrayIdle { get; set; }
         public Rectangle[] SpriteArrayMovement { get; set; }
-
         public Rectangle[] SpriteArrayHit { get; set; }
 
 
@@ -90,7 +91,8 @@ namespace GamePrototype.Entities.Mob
                 };
 
                 animation.Stop();
-                TakeDamage(2);
+                var activeWeapon = ActionBar.Items.FirstOrDefault(item => item.IsSelected);
+                TakeDamage(activeWeapon.Dmg);
             }
 
             hit.Update(gameTime);
@@ -112,7 +114,6 @@ namespace GamePrototype.Entities.Mob
 
         private void ChasePlayer()
         {
-
         }
 
         private void RandomMovement()
@@ -154,18 +155,7 @@ namespace GamePrototype.Entities.Mob
                 actionLocker = 0;
             }
         }
-
-        private void ResetSprite()
-        {
-            if (animation.IsAnimationFinished)
-            {
-                IsHit = false;
-                animation.FrameIndex = 0;
-                animation.TimeToUpdate = 0.20f;
-                SpriteArray = SpriteArrayIdle;
-            }
-        }
-
+                
         public void TakeDamage(int attackDmg)
         {
             Health -= attackDmg;

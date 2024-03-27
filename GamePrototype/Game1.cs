@@ -21,7 +21,7 @@ namespace GamePrototype
         Screen screen;
         UI.UI ui;
         Camera camera;
-                
+        
         public Game1()
         {
             _Content = Content;

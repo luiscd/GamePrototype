@@ -1,11 +1,14 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.GameWorld.Tiles;
+using GamePrototype.Objects.Weapons;
 using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 
 namespace GamePrototype.GameWorld
@@ -23,7 +26,10 @@ namespace GamePrototype.GameWorld
         public int TileRadius { get; set; }
         public int WorldWidth { get; set; }
         public int WorldHeight { get; set; }
+
         public static List<Tile> VisibleTiles = new List<Tile>();
+        public static List<PowerUp> VisiblePowerUps = new List<PowerUp>();
+        public static List<Objects.Object> VisibleObjects = new List<Objects.Object>();
 
         private int xOffset;
         private int yOffset;
@@ -50,6 +56,17 @@ namespace GamePrototype.GameWorld
             LoadLayerFloor();
             LoadLayerWalls();
             LoadPowerUps();
+
+            var rand = new Random();
+            var position = new Vector2(rand.Next(100), rand.Next(100));
+
+            Objects.Object.Weapons.Add(
+                new Sword()
+                {
+                    Position = position,
+                    CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 16)
+                });
+
         }
 
         private void LoadLayerFloor()
@@ -63,99 +80,49 @@ namespace GamePrototype.GameWorld
             }
         }
 
+
+        private List<ArrayObject> GetArrayValues(int[,] array, int value)
+        {
+            return Enumerable.Range(0, array.GetLength(0))
+                       .SelectMany(i => Enumerable.Range(0, array.GetLength(1))
+                       .Select(j => new ArrayObject
+                       {
+                           Row = i,
+                           Col = j,
+                           Value = array[i, j]
+                       }))
+                       .Where(item => item.Value == value)
+                       .ToList();
+        }
+
+        private List<int> GetDistinctArrayValues(int[,] array)
+        {
+            return Enumerable.Range(0, array.GetLength(0))
+                               .SelectMany(i => Enumerable.Range(0, array.GetLength(1))
+                                                           .Select(j => layers[1][i, j]))
+                               .Distinct()
+                               .Where(value => value != default(int))
+                               .ToList();
+        }
+
         private void LoadLayerWalls()
         {
-            Vector2 position = Vector2.Zero;
+            var distictValues = GetDistinctArrayValues(layers[1]);
 
-            for (int i = 0; i < layers[1].GetLength(0); i++)
+            foreach (var distinctValue in distictValues.Select((value, i) => new { i, value }))
             {
-                for (int j = 0; j < layers[1].GetLength(1); j++)
+                var result = GetArrayValues(layers[1], distinctValue.value);
+                foreach (var layer in result)
                 {
-                    var value = layers[1][i, j];
-
-                    if (value == 1)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 1));
-
-                    if (value == 2)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 2));
-
-                    if (value == 6)
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset), 3));
-
-                    if (value == 25)
+                    Vector2 position = new Vector2((layer.Col * tileSize) - xOffset, (layer.Row * tileSize) - yOffset);
+                    Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, distinctValue.i + 1)
                     {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 4)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8)
-                        });
-                    }
-
-                    if (value == 26)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 5)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 8)
-                        });
-                    }
-
-                    if (value == 30)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 6)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16)
-                        });
-                    }
-
-                    if (value == 97)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 7)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 16)
-                        });
-                    }
-
-                    if (value == 102)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 8)
-                        {
-                            CollisionBox = new Rectangle((int)position.X + 8, (int)position.Y, 8, 16)
-                        });
-                    }
-
-                    if (value == 121)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 9)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
-                        });
-                    }
-
-                    if (value == 122)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 10)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
-                        });
-                    }
-
-                    if (value == 126)
-                    {
-                        position = new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset);
-                        Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, 11)
-                        {
-                            CollisionBox = new Rectangle((int)position.X, (int)position.Y + 8, 16, 8)
-                        });
-                    }
+                        CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 8)
+                    });
                 }
             }
         }
+
 
         private void LoadArray(XmlNodeList nodes)
         {
@@ -247,9 +214,14 @@ namespace GamePrototype.GameWorld
                 tile.Draw(spriteBatch);
             }
 
-            foreach (var pUp in PowerUp.PowerUps)
+            foreach (var pUp in VisiblePowerUps)
             {
                 pUp.Draw(spriteBatch);
+            }
+
+            foreach (var weapon in VisibleObjects)
+            {
+                weapon.Draw(spriteBatch);
             }
 
             //foreach(var tile in WallTile.Walls)
@@ -258,5 +230,13 @@ namespace GamePrototype.GameWorld
             //}
         }
 
+    }
+
+
+    public class ArrayObject
+    {
+        public int Row { get; set; }
+        public int Col { get; set; }
+        public int Value { get; set; }
     }
 }

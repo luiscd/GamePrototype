@@ -64,5 +64,19 @@ namespace GamePrototype.Engine
                 }
             }
         }
+
+        public bool HandleWeaponsCollision(BaseEntity entity)
+        {
+            foreach (var weapon in Objects.Object.Weapons)
+            {
+                if (entity.CollisionBox.Intersects(weapon.CollisionBox))
+                {
+                    weapon.IsCollided = true;
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

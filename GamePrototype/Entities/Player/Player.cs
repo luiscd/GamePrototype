@@ -5,8 +5,8 @@ using GamePrototype.UI.UiBars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Linq;
+using System.Net.Security;
 
 namespace GamePrototype.Entities.Player
 {
@@ -17,12 +17,13 @@ namespace GamePrototype.Entities.Player
         Animation animation;
         Attack attack;
 
-        private Rectangle[] SpriteArrayAttackDown { get; set; }
-
-        private Rectangle[] SpriteArrayAttack { get; set; }
+        public int Stamina { get; set; } = 10;
 
         public bool IsAttacking { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Player() : base()
         {
             inputManager = new InputManager();
@@ -104,11 +105,14 @@ namespace GamePrototype.Entities.Player
             SpriteArray = SpriteArrayIdleDown;
         }
 
+        #region Public Methods
         public void Update(GameTime gameTime)
         {
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
             inputManager.UpdateState();
             LastPosition = WorldPosition;
+
+            //RestoreStamina();
 
             //Right movement animation
             if (inputManager.IsKeyDown(Keys.Right))
@@ -159,19 +163,45 @@ namespace GamePrototype.Entities.Player
             animation.Update(gameTime, SpriteArray);
         }
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            attack?.Draw(spriteBatch);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private int RemoveStamina(int power)
+        {
+            return Stamina - power;
+        }
+
+        private void RestoreStamina()
+        {
+            if (Stamina < 10)
+            {
+                Stamina++;
+            }
+        }
+
         private void Attack(GameTime gameTime)
         {
-            //Attack animation
             if (inputManager.IsKeyDown(Keys.Space))
             {
-                if (!IsAttacking)
+                var actionBarElement = ActionBar.Items.FirstOrDefault(element => element.IsSelected);
+                if (!actionBarElement.IsFree)
                 {
-                    IsAttacking = true;
-                    inputManager.SaveLastKeyPressed(Keys.Space);
-                    attack = new Attack(WorldPosition, Direction)
+                    if (!IsAttacking)
                     {
-                        IsAnimationPlaying = true
-                    };
+                        IsAttacking = true;
+                        inputManager.SaveLastKeyPressed(Keys.Space);
+                        attack = new Attack(WorldPosition, Direction)
+                        {
+                            IsAnimationPlaying = true
+                        };
+                    }
                 }
             }
             else
@@ -198,22 +228,27 @@ namespace GamePrototype.Entities.Player
         private void CollisionDetection()
         {
             collisionHandler.HandleCollisionsEntities(this);
-            
-            if (collisionHandler.HandleCollisionPowerUps(this)) 
+
+            if (collisionHandler.HandleCollisionPowerUps(this))
                 CollectPowerUp();
-    
-            if (collisionHandler.HandleCollisionsWorld(this)) 
+
+            if (collisionHandler.HandleCollisionsWorld(this))
                 SetLastPosition();
-            
-            if (attack != null) 
+
+            if (attack != null)
                 collisionHandler.HandleAttackCollision(attack);
+
+            if (collisionHandler.HandleWeaponsCollision(this))
+                CollectWeapon();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        private void CollectWeapon()
         {
-            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
-            attack?.Draw(spriteBatch);
+            UI.UI.LoadWeaponUI(Objects.Object.Weapons.FirstOrDefault(x => x.IsCollided));
+            Objects.Object.Weapons.RemoveAll(weapon => weapon.IsCollided);
         }
+
+        #endregion
     }
 
 }

@@ -54,8 +54,7 @@ namespace GamePrototype.GameWorld.Tiles
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White);
-            //spriteBatch.Draw(SpriteSheet, CollisionBox, Color.Blue);
+            spriteBatch.Draw(SpriteSheet, TilePosition, SpriteRectangle, Color.White, 0f, Vector2.Zero, 1f, 0, 0.0f);
         }
 
         public float GetBottomBoundary()

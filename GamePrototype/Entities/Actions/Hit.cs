@@ -13,7 +13,6 @@ namespace GamePrototype.Entities.Actions
         public Vector2 Position { get; set; }
         public SpriteEffects SpriteEffect { get; set; }
 
-
         private Texture2D spriteSheet;
 
         public Hit()

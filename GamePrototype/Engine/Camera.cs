@@ -1,6 +1,8 @@
-﻿using GamePrototype.Entities.Player;
+﻿using GamePrototype.Entities.Mob;
+using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld;
 using GamePrototype.GameWorld.Tiles;
+using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,7 +19,7 @@ namespace GamePrototype.Engine
         private Vector2 position;
         private Engine engine;
 
-        public float Zoom { get; set; } = 3f; // Initial zoom level
+        public float Zoom { get; set; } = 2.5f; // Initial zoom level
         public float UiZoom { get; set; } = 2f;
 
         private int minimumWorldPositionX;
@@ -39,8 +41,11 @@ namespace GamePrototype.Engine
             position = _player.WorldPosition;
             SetWorldBoundaries();
             position = CalculateWorldBoundaries(position);
-                        
-            Level.VisibleTiles = Tile.Tiles.Where(tile => IsTileInScreen(tile, viewport)).ToList();
+
+            Level.VisibleTiles = Tile.Tiles.Where(cc => IsSpriteInScreen(cc.TilePosition, viewport)).ToList();
+            Screen.VisibleMobList = Mob.Mobs.Where(cc => IsSpriteInScreen(cc.WorldPosition, viewport)).ToList();
+            Level.VisibleObjects = Objects.Object.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
+            Level.VisiblePowerUps = PowerUp.PowerUps.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
 
             return Matrix.CreateTranslation(new Vector3(-position, 0f))
              * Matrix.CreateRotationZ(rotation)
@@ -56,34 +61,35 @@ namespace GamePrototype.Engine
            * Matrix.CreateTranslation(new Vector3(position, 0f));
         }
 
-        private bool IsTileInScreen(Tile tile, Viewport viewport)
+        private bool IsSpriteInScreen(Vector2 worldPosition, Viewport viewport)
         {
-            Vector2 screenPosition = tile.TilePosition;
             Vector2 playerPosition = position;
-            Vector2 relativePosition = screenPosition - playerPosition;
+            Vector2 relativePosition = worldPosition - playerPosition;
+            return CalculatePosition(relativePosition, viewport);
+        }
 
-            float visibleRangeX = viewport.Width / 5f; 
-            float visibleRangeY = viewport.Height / 5f; 
+        private bool CalculatePosition(Vector2 relativePosition, Viewport viewport)
+        {
+            float visibleRangeX = viewport.Width / 4.5f;
+            float visibleRangeY = viewport.Height / 4.5f;
 
             if (Math.Abs(relativePosition.X) <= visibleRangeX && Math.Abs(relativePosition.Y) <= visibleRangeY)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         private void SetWorldBoundaries()
         {
             ////X boundaries of the map
-            minimumWorldPositionX = engine.GetWorldEdgeX(-1, 21);
-            maximumWorldPositionX = engine.GetWorldEdgeX(1, -21);
+            minimumWorldPositionX = engine.GetWorldEdgeX(-1, 24);
+            maximumWorldPositionX = engine.GetWorldEdgeX(1, -24);
 
             ////Y boundaries of the map
-            minimumWorldPositionY = engine.GetWorldEdgeY(-1, 15);
-            maximumWorldPositionY = engine.GetWorldEdgeY(1, -15);
+            minimumWorldPositionY = engine.GetWorldEdgeY(-1, 19);
+            maximumWorldPositionY = engine.GetWorldEdgeY(1, -19);
         }
 
         private Vector2 CalculateWorldBoundaries(Vector2 _position)

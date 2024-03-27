@@ -2,31 +2,79 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using GamePrototype.UI.Singulars;
+using GamePrototype.Engine;
+using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace GamePrototype.UI.UiBars
 {
     public class ActionBar
     {
-        private static List<ItemBox> items = new List<ItemBox>();
+        public static List<ItemBox> Items = new List<ItemBox>();
 
-        public ActionBar( UI ui)
+        InputManager inputManager;
+
+        public ActionBar(UI ui)
         {
+            inputManager = new InputManager();
+
             for (int i = 0; i < 5; i++)
             {
-                items.Add(new ItemBox()
+                Items.Add(new ItemBox()
                 {
                     Position = new Vector2(ui.ActionBarRectangle.Center.X + i * 18 - 2 * 16, ui.ActionBarRectangle.Y + 6),
-                    IsSelected = false,
+                    IsSelected = i == 0,
                 });
+            }
+
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            inputManager.UpdateState();
+
+            if (inputManager.IsKeyDown(Keys.D1))
+            {
+                ResetSelectedItems();
+                Items[0].IsSelected = true;
+            }
+
+            if (inputManager.IsKeyDown(Keys.D2))
+            {
+                ResetSelectedItems();
+                Items[1].IsSelected = true;
+            }
+
+            if (inputManager.IsKeyDown(Keys.D3))
+            {
+                ResetSelectedItems();
+                Items[2].IsSelected = true;
+            }
+
+            if (inputManager.IsKeyDown(Keys.D4))
+            {
+                ResetSelectedItems();
+                Items[3].IsSelected = true;
+            }
+
+            if (inputManager.IsKeyDown(Keys.D5))
+            {
+                ResetSelectedItems();
+                Items[4].IsSelected = true;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var item in items)
+            foreach (var item in Items)
             {
                 item.Draw(spriteBatch);
             }
+        }
+
+        private void ResetSelectedItems()
+        {
+            Items.FirstOrDefault(item => item.IsSelected).IsSelected = false;
         }
     }
 }

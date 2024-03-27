@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace GamePrototype.Entities
 {
 
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         public static List<BaseEntity> Entities = new List<BaseEntity>();
 
