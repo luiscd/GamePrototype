@@ -1,15 +1,8 @@
-﻿using GamePrototype.Engine;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 
 namespace GamePrototype.Objects.Weapons
 {
-    public class Sword : Object
+    public class Sword : Weapon
     {
         public Sword()
         {

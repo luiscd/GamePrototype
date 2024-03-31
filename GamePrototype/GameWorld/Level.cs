@@ -4,10 +4,8 @@ using GamePrototype.Objects.Weapons;
 using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 
@@ -30,6 +28,7 @@ namespace GamePrototype.GameWorld
         public static List<Tile> VisibleTiles = new List<Tile>();
         public static List<PowerUp> VisiblePowerUps = new List<PowerUp>();
         public static List<Objects.Object> VisibleObjects = new List<Objects.Object>();
+        public static List<Weapon> VisibleWeapons = new List<Weapon>();
 
         private int xOffset;
         private int yOffset;
@@ -50,23 +49,29 @@ namespace GamePrototype.GameWorld
             XmlNodeList nodes = readXML.GetNodes();
             LoadArray(nodes);
 
-            xOffset = (WorldWidth * tileSize) / 2;
-            yOffset = (WorldHeight * tileSize) / 2;
+            xOffset = NumberOfTiles(WorldWidth, tileSize) / 2;
+            yOffset = NumberOfTiles(WorldHeight, tileSize) / 2;
 
             LoadLayerFloor();
             LoadLayerWalls();
             LoadPowerUps();
 
             var rand = new Random();
-            var position = new Vector2(rand.Next(100), rand.Next(100));
 
-            Objects.Object.Weapons.Add(
+            var swordPosition = new Vector2(rand.Next(100), rand.Next(100));
+            var hammerPosition = new Vector2(rand.Next(100), rand.Next(100));
+
+            Weapon.Weapons.Add(
                 new Sword()
                 {
-                    Position = position,
-                    CollisionBox = new Rectangle((int)position.X, (int)position.Y, 16, 16)
-                });
-
+                    Position = swordPosition,
+                    CollisionBox = new Rectangle((int)swordPosition.X, (int)swordPosition.Y, 16, 16)
+                },
+                new Hammer()
+                {
+                    Position = hammerPosition,
+                    CollisionBox = new Rectangle((int)hammerPosition.X, (int)hammerPosition.Y, 16, 16)
+                }) ;
         }
 
         private void LoadLayerFloor()
@@ -80,6 +85,10 @@ namespace GamePrototype.GameWorld
             }
         }
 
+        private int NumberOfTiles(int dimension, int tileSize)
+        {
+            return dimension * tileSize;
+        }
 
         private List<ArrayObject> GetArrayValues(int[,] array, int value)
         {
@@ -219,15 +228,10 @@ namespace GamePrototype.GameWorld
                 pUp.Draw(spriteBatch);
             }
 
-            foreach (var weapon in VisibleObjects)
+            foreach (var weapon in VisibleWeapons)
             {
                 weapon.Draw(spriteBatch);
             }
-
-            //foreach(var tile in WallTile.Walls)
-            //{
-            //    tile.Draw(spriteBatch);
-            //}
         }
 
     }

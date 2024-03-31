@@ -2,6 +2,7 @@
 using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld;
 using GamePrototype.GameWorld.Tiles;
+using GamePrototype.Objects.Weapons;
 using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -44,7 +45,8 @@ namespace GamePrototype.Engine
 
             Level.VisibleTiles = Tile.Tiles.Where(cc => IsSpriteInScreen(cc.TilePosition, viewport)).ToList();
             Screen.VisibleMobList = Mob.Mobs.Where(cc => IsSpriteInScreen(cc.WorldPosition, viewport)).ToList();
-            Level.VisibleObjects = Objects.Object.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
+            //Level.VisibleObjects = Objects.Object.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
+            Level.VisibleWeapons = Weapon.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
             Level.VisiblePowerUps = PowerUp.PowerUps.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
 
             return Matrix.CreateTranslation(new Vector3(-position, 0f))

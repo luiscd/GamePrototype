@@ -4,19 +4,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GamePrototype.Objects.Weapons
 {
-    public class Hammer : Object
+    public class Hammer : Weapon
     {
-        private Texture2D spriteSheet;
+
+        private Vector2 knockbackDirection;
+        private float knockbackMagnitude;
 
         public Hammer()
         {
-            spriteSheet = GlobalVariables.LoadSpriteSheet();
+            Sprite = new Rectangle(224, 128, 16, 16);
+            Damage = 4;
         }
-
-        public void Draw(SpriteBatch spriteBatch)
+        public void KnockBack(Vector2 direction, float magnitude)
         {
-            spriteBatch.Draw(spriteSheet, Position, Sprite, Color.White);
+            // Normalize the direction vector to ensure consistent knockback speed
+            direction = Vector2.Normalize(direction);
+
+            // Calculate the knockback velocity
+            Vector2 knockbackVelocity = direction * magnitude;
+
+            // Apply the knockback velocity to the character's velocity
+            //Velocity += knockbackVelocity;
         }
-        
     }
 }

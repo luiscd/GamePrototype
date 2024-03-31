@@ -9,16 +9,14 @@ using System.Threading.Tasks;
 
 namespace GamePrototype.Objects
 {
-    public class Object
+    public abstract class Object
     {
-        public static List<Object> Weapons = new List<Object>();
-
+        
         public Vector2 Position { get; set; }
         public int Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public Rectangle Sprite { get; set; }   
         public Rectangle CollisionBox { get; set; }
-        public int Damage { get;set; }
         public bool IsCollided { get; set; }
 
         private Texture2D spriteSheet; 
