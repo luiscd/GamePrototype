@@ -12,6 +12,8 @@ namespace GamePrototype.Objects
     public abstract class Object
     {
         
+        public static List<Object> Loot = new List<Object>();
+
         public Vector2 Position { get; set; }
         public int Radius { get; set; }
         public Rectangle Bounds { get; set; }
@@ -19,16 +21,27 @@ namespace GamePrototype.Objects
         public Rectangle CollisionBox { get; set; }
         public bool IsCollided { get; set; }
 
-        private Texture2D spriteSheet; 
+        public Rectangle[] SpriteArray { get; set; }
+
+        public Texture2D SpriteSheet { get; set; }
+
+        private Animation animation;
 
         public Object()
         {
-            spriteSheet = GlobalVariables.LoadSpriteSheet();    
+            SpriteSheet = GlobalVariables.LoadSpriteSheet();
+            CollisionBox = new Rectangle((int)Position.X - 8, (int)Position.Y - 8, 16, 16);
+            animation = new Animation();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Update(GameTime gameTime)
         {
-            spriteBatch.Draw(spriteSheet, Position, Sprite, Color.White);
+            animation.Update(gameTime, SpriteArray);
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(SpriteSheet, Position, Sprite, Color.White);
         }
     }
 }

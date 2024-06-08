@@ -2,6 +2,7 @@
 using GamePrototype.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Bson;
 
 namespace GamePrototype.Entities
 {
@@ -41,6 +42,8 @@ namespace GamePrototype.Entities
             set { worldPosition = value; }
         }
 
+        public static Vector2 StaticWorldPosition;
+
         public Texture2D SpriteSheet { get; set; }
         public float Speed { get; set; }
 
@@ -77,6 +80,7 @@ namespace GamePrototype.Entities
         public void SetDirectionX(int _direction)
         {
             direction.X = _direction;
+            Effect = direction.X == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
         }
 
         public void SetDirectionY(int _direction)
@@ -87,6 +91,26 @@ namespace GamePrototype.Entities
         public void TakeDmg(int attackDmg)
         {
             Health = Health - attackDmg;
+        }
+
+        public void ApplyKnockBack(Vector2 knockBack)
+        {
+            WorldPosition = new Vector2(knockBack.X * (1 - 1), knockBack.Y * (1 - 1));
+        }
+
+        public Vector2 CalculateKnockBack( Vector2 targetPosition, float knockbackForce)
+        {
+            //Vector2 attackerPosition,
+            // Step 1: Calculate the direction vector
+            Vector2 direction = targetPosition;// - attackerPosition;
+
+            // Step 2: Normalize the direction vector
+            direction.Normalize();
+
+            // Step 3: Apply the knockback force
+            Vector2 knockback = direction * knockbackForce;
+
+            return knockback;
         }
 
         public void CalculateWorldPositionX(double deltaTime)
@@ -164,6 +188,11 @@ namespace GamePrototype.Entities
         public bool IsDeadMethod()
         {
             return Health < 1;
+        }
+        
+        public void TakeDamage(int attackDmg)
+        {
+            Health -= attackDmg;
         }
     }
 }

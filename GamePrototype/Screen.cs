@@ -3,13 +3,11 @@ using GamePrototype.Entities.Actions;
 using GamePrototype.Entities.Mob;
 using GamePrototype.Entities.Player;
 using GamePrototype.GameWorld;
-using GamePrototype.GameWorld.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using GamePrototype.Objects.Misc;
 
 namespace GamePrototype
 {
@@ -22,6 +20,7 @@ namespace GamePrototype
         private Level level;
         public Camera camera;
         public Player player;
+        public Chest chest;  
         private Phantom phantom;
         int spriteRadius = 8;
 
@@ -38,8 +37,10 @@ namespace GamePrototype
             level.LoadLevel();
             engine = new Engine.Engine(level);
 
-            LoadPlayer();
             LoadMob();
+            LoadChest();
+
+            LoadPlayer();
         }
 
         #region Public Methods
@@ -48,6 +49,7 @@ namespace GamePrototype
         {
             level.Update(gameTime);
             player.Update(gameTime);
+            chest.Update(gameTime);
 
             foreach (var mob in Mob.Mobs)
             {
@@ -72,12 +74,20 @@ namespace GamePrototype
         public void Draw(SpriteBatch spriteBatch)
         {
             level.Draw(spriteBatch);
-            player.Draw(spriteBatch);
-
+            
             foreach (var mob in VisibleMobList)
             {
                 mob.Draw(spriteBatch);
             }
+
+            chest.Draw(spriteBatch);
+
+            foreach (var loot in Objects.Object.Loot)
+            {
+                loot.Draw(spriteBatch);
+            }
+
+            player.Draw(spriteBatch);
 
             die?.Draw(spriteBatch);
         }
@@ -112,8 +122,7 @@ namespace GamePrototype
             //var playerEntity = engine.configReader.LoadEntities().FirstOrDefault(entity => entity.Type == 0);
             player = new Player()
             {
-                //SpriteSheet = spriteSheet,
-                Speed = 0.12f,
+                Speed = 0.11f,
                 Direction = new Vector2(0, 0),
                 WorldPosition = new Vector2(-spriteRadius, -spriteRadius),
                 Name = "player",
@@ -155,6 +164,14 @@ namespace GamePrototype
                     Level = 1
                 });
             }
+        }
+
+        private void LoadChest()
+        {
+            chest = new Chest()
+            {
+                Position = new Vector2(100, 100),  
+            };
         }
 
         #endregion

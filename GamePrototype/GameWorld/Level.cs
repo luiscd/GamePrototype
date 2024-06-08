@@ -65,20 +65,27 @@ namespace GamePrototype.GameWorld
                 new Sword()
                 {
                     Position = swordPosition,
-                    CollisionBox = new Rectangle((int)swordPosition.X, (int)swordPosition.Y, 16, 16)
-                },
+                    CollisionBox = new Rectangle((int)swordPosition.X, (int)swordPosition.Y, 16, 16),
+                    Durability = rand.Next(100),
+                });
+
+            Weapon.Weapons.Add(
                 new Hammer()
                 {
                     Position = hammerPosition,
-                    CollisionBox = new Rectangle((int)hammerPosition.X, (int)hammerPosition.Y, 16, 16)
-                }) ;
+                    CollisionBox = new Rectangle((int)hammerPosition.X, (int)hammerPosition.Y, 16, 16),
+                    Durability = rand.Next(100),
+                });
         }
 
         private void LoadLayerFloor()
         {
-            for (int i = 0; i < layers[0].GetLength(0); i++)
+            int rowCount = layers[0].GetLength(0);
+            int colCount = layers[0].GetLength(1);
+
+            for (int i = 0; i < rowCount; i++)
             {
-                for (int j = 0; j < layers[0].GetLength(1); j++)
+                for (int j = 0; j < colCount; j++)
                 {
                     Tile.Tiles.Add(new FloorTile(xOffset, yOffset, tileSize, new Vector2((j * tileSize) - xOffset, (i * tileSize) - yOffset)));
                 }
@@ -123,7 +130,7 @@ namespace GamePrototype.GameWorld
                 var result = GetArrayValues(layers[1], distinctValue.value);
                 foreach (var layer in result)
                 {
-                    Vector2 position = new Vector2((layer.Col * tileSize) - xOffset, (layer.Row * tileSize) - yOffset);
+                    var position = new Vector2((layer.Col * tileSize) - xOffset, (layer.Row * tileSize) - yOffset);
                     Tile.Tiles.Add(new WallTile(xOffset, yOffset, tileSize, position, distinctValue.i + 1)
                     {
                         CollisionBox = new Rectangle((int)position.X, (int)position.Y, 8, 8)
@@ -131,7 +138,6 @@ namespace GamePrototype.GameWorld
                 }
             }
         }
-
 
         private void LoadArray(XmlNodeList nodes)
         {

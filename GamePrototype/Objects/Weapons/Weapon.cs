@@ -10,6 +10,7 @@ namespace GamePrototype.Objects.Weapons
     {
         public static List<Weapon> Weapons = new List<Weapon>();
 
+        public int Durability { get; set; }
         public int Damage { get; set; }
         
     }

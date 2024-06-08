@@ -7,7 +7,6 @@ using GamePrototype.UI.Singulars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Diagnostics;
 using System.Linq;
 
 namespace GamePrototype.Engine
@@ -45,7 +44,6 @@ namespace GamePrototype.Engine
 
             Level.VisibleTiles = Tile.Tiles.Where(cc => IsSpriteInScreen(cc.TilePosition, viewport)).ToList();
             Screen.VisibleMobList = Mob.Mobs.Where(cc => IsSpriteInScreen(cc.WorldPosition, viewport)).ToList();
-            //Level.VisibleObjects = Objects.Object.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
             Level.VisibleWeapons = Weapon.Weapons.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
             Level.VisiblePowerUps = PowerUp.PowerUps.Where(cc => IsSpriteInScreen(cc.Position, viewport)).ToList();
 

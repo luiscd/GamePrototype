@@ -1,5 +1,6 @@
 ﻿using GamePrototype.Engine;
 using GamePrototype.Entities.Actions;
+using GamePrototype.Objects.Weapons;
 using GamePrototype.UI.Singulars;
 using GamePrototype.UI.UiBars;
 using Microsoft.Xna.Framework;
@@ -110,53 +111,22 @@ namespace GamePrototype.Entities.Player
         {
             var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
             inputManager.UpdateState();
+            StaticWorldPosition = WorldPosition;
             LastPosition = WorldPosition;
 
             //RestoreStamina();
 
             //Right movement animation
-            if (inputManager.IsKeyDown(Keys.Right))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Right);
-                MoveRight(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
-            {
-                SpriteArray = SpriteArrayIdleRight;
-            }
+            RightMovementAnimation(deltaTime);
 
             //Left movement animation
-            if (inputManager.IsKeyDown(Keys.Left))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Left);
-                MoveLeft(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
-            {
-                SpriteArray = SpriteArrayIdleRight;
-            }
+            LeftMovementAnimation(deltaTime);
 
             //Up movement animation
-            if (inputManager.IsKeyDown(Keys.Up))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Up);
-                MoveUp(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Up) && inputManager.IsKeyUp(Keys.Up))
-            {
-                SpriteArray = SpriteArrayIdleUp;
-            }
+            UpMovementAnimation(deltaTime);
 
             //Down movement animation
-            if (inputManager.IsKeyDown(Keys.Down))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Down);
-                MoveDown(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Down) && inputManager.IsKeyUp(Keys.Down))
-            {
-                SpriteArray = SpriteArrayIdleDown;
-            }
+            DownMovementAnimation(deltaTime);
 
             Attack(gameTime);
             CollisionDetection();
@@ -169,9 +139,67 @@ namespace GamePrototype.Entities.Player
             attack?.Draw(spriteBatch);
         }
 
+        public static Vector2 GetPlayerPosition()
+        {
+            return StaticWorldPosition;
+        }
+
         #endregion
 
         #region Private Methods
+
+        private void RightMovementAnimation(double deltaTime)
+        {
+            if (inputManager.IsKeyDown(Keys.Right))
+            {
+                inputManager.SaveLastKeyPressed(Keys.Right);
+                MoveRight(deltaTime);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
+            {
+                SpriteArray = SpriteArrayIdleRight;
+            }
+        }
+
+        private void LeftMovementAnimation(double deltaTime)
+        {
+            if (inputManager.IsKeyDown(Keys.Left))
+            {
+                inputManager.SaveLastKeyPressed(Keys.Left);
+                MoveLeft(deltaTime);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
+            {
+                SpriteArray = SpriteArrayIdleRight;
+            }
+
+        }
+
+        private void UpMovementAnimation(double deltaTime)
+        {
+            if (inputManager.IsKeyDown(Keys.Up))
+            {
+                inputManager.SaveLastKeyPressed(Keys.Up);
+                MoveUp(deltaTime);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Up) && inputManager.IsKeyUp(Keys.Up))
+            {
+                SpriteArray = SpriteArrayIdleUp;
+            }
+        }
+
+        private void DownMovementAnimation(double deltaTime)
+        {
+            if (inputManager.IsKeyDown(Keys.Down))
+            {
+                inputManager.SaveLastKeyPressed(Keys.Down);
+                MoveDown(deltaTime);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Down) && inputManager.IsKeyUp(Keys.Down))
+            {
+                SpriteArray = SpriteArrayIdleDown;
+            }
+        }
 
         private int RemoveStamina(int power)
         {
@@ -191,17 +219,14 @@ namespace GamePrototype.Entities.Player
             if (inputManager.IsKeyDown(Keys.Space))
             {
                 var actionBarElement = ActionBar.Items.FirstOrDefault(element => element.IsSelected);
-                if (!actionBarElement.IsFree)
+                if (!actionBarElement.IsFree && !IsAttacking)
                 {
-                    if (!IsAttacking)
+                    IsAttacking = true;
+                    inputManager.SaveLastKeyPressed(Keys.Space);
+                    attack = new Attack(WorldPosition, Direction)
                     {
-                        IsAttacking = true;
-                        inputManager.SaveLastKeyPressed(Keys.Space);
-                        attack = new Attack(WorldPosition, Direction)
-                        {
-                            IsAnimationPlaying = true
-                        };
-                    }
+                        IsAnimationPlaying = true
+                    };
                 }
             }
             else
@@ -227,7 +252,12 @@ namespace GamePrototype.Entities.Player
 
         private void CollisionDetection()
         {
-            collisionHandler.HandleCollisionsEntities(this);
+            if (collisionHandler.HandleCollisionsEntities(this))
+            {
+                TakeDmg(AttackDamage);
+                //var knockBack = CalculateKnockBack(WorldPosition, 10);
+                //ApplyKnockBack(knockBack);
+            }
 
             if (collisionHandler.HandleCollisionPowerUps(this))
                 CollectPowerUp();
@@ -244,8 +274,8 @@ namespace GamePrototype.Entities.Player
 
         private void CollectWeapon()
         {
-            UI.UI.LoadWeaponUI(Objects.Object.Weapons.FirstOrDefault(x => x.IsCollided));
-            Objects.Object.Weapons.RemoveAll(weapon => weapon.IsCollided);
+            UI.UI.LoadWeaponUI(Weapon.Weapons.FirstOrDefault(x => x.IsCollided));
+            Weapon.Weapons.RemoveAll(weapon => weapon.IsCollided);
         }
 
         #endregion

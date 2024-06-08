@@ -30,6 +30,7 @@ namespace GamePrototype.UI
 
         static Sword sword;
         static LongSword longSword;
+        static Hammer hammer;
 
         public UI()
         {
@@ -55,6 +56,7 @@ namespace GamePrototype.UI
             actionBar.Draw(spriteBatch);
             sword?.Draw(spriteBatch);
             longSword?.Draw(spriteBatch);
+            hammer?.Draw(spriteBatch);
             spriteBatch.End();
 
             //Draw PowerUps rectangle
@@ -62,9 +64,9 @@ namespace GamePrototype.UI
             DrawRectangle(spriteBatch, PowerUpRectangle, Color.White, 2);
             powerUpBar.Draw(spriteBatch);
             spriteBatch.End();
-        }
+        }   
 
-        public static void LoadWeaponUI(Objects.Object weapon)
+        public static void LoadWeaponUI(Weapon weapon)
         {
             var actionBarSlot = ActionBar.Items.FirstOrDefault(item => item.IsFree);
             
@@ -74,11 +76,11 @@ namespace GamePrototype.UI
             } 
             else
             {
-                SendToInventory(weapon);
+                StoreToInventory(weapon);
             }          
         }
 
-        private static void SendToActionBar(ItemBox actionBarSlot, Objects.Object actionBarObject)
+        private static void SendToActionBar(ItemBox actionBarSlot, Weapon actionBarObject)
         {
             actionBarSlot.IsFree = false;
             actionBarSlot.Dmg = actionBarObject.Damage;
@@ -99,12 +101,19 @@ namespace GamePrototype.UI
                     };
                     break;
 
+                case Hammer:
+                    hammer = new Hammer()
+                    {
+                        Position = actionBarSlot.Position
+                    };
+                    break;
+
                 default:
                     break;
             }
         }
 
-        private static void SendToInventory(Objects.Object storeObject)
+        private static void StoreToInventory(Objects.Object storeObject)
         {
 
         }
