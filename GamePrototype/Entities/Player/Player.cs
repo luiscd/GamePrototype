@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using System.Net.Security;
+using System.Security;
 
 namespace GamePrototype.Entities.Player
 {
@@ -19,8 +20,11 @@ namespace GamePrototype.Entities.Player
         Attack attack;
 
         public int Stamina { get; set; } = 10;
-
         public bool IsAttacking { get; set; }
+
+        private Rectangle[] SpriteArrayIdle = new Rectangle[6];
+        private Rectangle[] SpriteArrayAttackVertical = new Rectangle[6];
+        private Rectangle[] SpriteArrayAttackHorizontal = new Rectangle[6];
 
         /// <summary>
         /// Constructor
@@ -36,74 +40,26 @@ namespace GamePrototype.Entities.Player
 
             Effect = SpriteEffects.None;
             SpriteSize = 16;
+            SpriteSheet = GlobalVariables.GameTexturesDictionary["playerIdleDown"];
+            SpriteArray = new Rectangle[6];
 
-            //
-            //Down movement animation
-            //
-            SpriteArrayDown = new Rectangle[6];
-            SpriteArrayDown[0] = new Rectangle(192, 0, SpriteSize, SpriteSize);
-            SpriteArrayDown[1] = new Rectangle(208, 0, SpriteSize, SpriteSize);
-            SpriteArrayDown[2] = new Rectangle(224, 0, SpriteSize, SpriteSize);
-            SpriteArrayDown[3] = new Rectangle(240, 0, SpriteSize, SpriteSize);
-            SpriteArrayDown[4] = new Rectangle(256, 0, SpriteSize, SpriteSize);
-            SpriteArrayDown[5] = new Rectangle(272, 0, SpriteSize, SpriteSize);
+            for (int i = 0; i <= 5; i++)
+            {
+                SpriteArrayIdle[i] = new Rectangle(i * 16, 0, SpriteSize, SpriteSize);
+            }
 
-            //
-            //Down idle animation
-            //
-            SpriteArrayIdleDown = new Rectangle[6];
-            SpriteArrayIdleDown[0] = new Rectangle(192, SpriteSize, SpriteSize, SpriteSize);
-            SpriteArrayIdleDown[1] = new Rectangle(208, SpriteSize, SpriteSize, SpriteSize);
-            SpriteArrayIdleDown[2] = new Rectangle(224, SpriteSize, SpriteSize, SpriteSize);
-            SpriteArrayIdleDown[3] = new Rectangle(240, SpriteSize, SpriteSize, SpriteSize);
-            SpriteArrayIdleDown[4] = new Rectangle(256, SpriteSize, SpriteSize, SpriteSize);
-            SpriteArrayIdleDown[5] = new Rectangle(272, SpriteSize, SpriteSize, SpriteSize);
+            for (int i = 0; i <= 5; i++)
+            {
+                SpriteArrayAttackVertical[i] = new Rectangle(i * 48, 0, 48, 32);
+            }
 
-            //
-            //Movement right animation
-            //
-            SpriteArrayRight = new Rectangle[6];
-            SpriteArrayRight[0] = new Rectangle(192, 32, SpriteSize, SpriteSize);
-            SpriteArrayRight[1] = new Rectangle(208, 32, SpriteSize, SpriteSize);
-            SpriteArrayRight[2] = new Rectangle(224, 32, SpriteSize, SpriteSize);
-            SpriteArrayRight[3] = new Rectangle(240, 32, SpriteSize, SpriteSize);
-            SpriteArrayRight[4] = new Rectangle(256, 32, SpriteSize, SpriteSize);
-            SpriteArrayRight[5] = new Rectangle(272, 32, SpriteSize, SpriteSize);
+            for (int i = 0; i <= 5; i++)
+            {
+                SpriteArrayAttackHorizontal[i] = new Rectangle(i * 32, 0, 32, 48);
+            }
 
-            //
-            //Rigth idle animation
-            //
-            SpriteArrayIdleRight = new Rectangle[6];
-            SpriteArrayIdleRight[0] = new Rectangle(192, 48, SpriteSize, SpriteSize);
-            SpriteArrayIdleRight[1] = new Rectangle(208, 48, SpriteSize, SpriteSize);
-            SpriteArrayIdleRight[2] = new Rectangle(224, 48, SpriteSize, SpriteSize);
-            SpriteArrayIdleRight[3] = new Rectangle(240, 48, SpriteSize, SpriteSize);
-            SpriteArrayIdleRight[4] = new Rectangle(256, 48, SpriteSize, SpriteSize);
-            SpriteArrayIdleRight[5] = new Rectangle(272, 48, SpriteSize, SpriteSize);
-
-            //
-            //Up movement animation
-            //
-            SpriteArrayUp = new Rectangle[6];
-            SpriteArrayUp[0] = new Rectangle(192, 64, SpriteSize, SpriteSize);
-            SpriteArrayUp[1] = new Rectangle(208, 64, SpriteSize, SpriteSize);
-            SpriteArrayUp[2] = new Rectangle(224, 64, SpriteSize, SpriteSize);
-            SpriteArrayUp[3] = new Rectangle(240, 64, SpriteSize, SpriteSize);
-            SpriteArrayUp[4] = new Rectangle(256, 64, SpriteSize, SpriteSize);
-            SpriteArrayUp[5] = new Rectangle(272, 64, SpriteSize, SpriteSize);
-
-            //
-            //Up idle animation
-            //
-            SpriteArrayIdleUp = new Rectangle[6];
-            SpriteArrayIdleUp[0] = new Rectangle(192, 80, SpriteSize, SpriteSize);
-            SpriteArrayIdleUp[1] = new Rectangle(208, 80, SpriteSize, SpriteSize);
-            SpriteArrayIdleUp[2] = new Rectangle(224, 80, SpriteSize, SpriteSize);
-            SpriteArrayIdleUp[3] = new Rectangle(240, 80, SpriteSize, SpriteSize);
-            SpriteArrayIdleUp[4] = new Rectangle(256, 80, SpriteSize, SpriteSize);
-            SpriteArrayIdleUp[5] = new Rectangle(272, 80, SpriteSize, SpriteSize);
-
-            SpriteArray = SpriteArrayIdleDown;
+            SpriteArray = SpriteArrayIdle;
+            DirectionString = "Down";
         }
 
         #region Public Methods
@@ -113,29 +69,115 @@ namespace GamePrototype.Entities.Player
             inputManager.UpdateState();
             StaticWorldPosition = WorldPosition;
             LastPosition = WorldPosition;
-
-            //RestoreStamina();
-
-            //Right movement animation
-            RightMovementAnimation(deltaTime);
-
-            //Left movement animation
-            LeftMovementAnimation(deltaTime);
-
-            //Up movement animation
-            UpMovementAnimation(deltaTime);
-
-            //Down movement animation
-            DownMovementAnimation(deltaTime);
-
-            Attack(gameTime);
-            CollisionDetection();
             animation.Update(gameTime, SpriteArray);
+
+            if (inputManager.IsKeyDown(Keys.Right))
+            {
+                IsMoving = true;
+                DirectionString = "Right";
+                SpriteSheet = GlobalVariables.GameTexturesDictionary["playerMoveRight"];
+                MoveRight(deltaTime);
+                inputManager.SaveLastKeyPressed(Keys.Right);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Right))
+            {
+                IsMoving = false;
+            }
+
+            if (inputManager.IsKeyDown(Keys.Left))
+            {
+                IsMoving = true;
+                DirectionString = "Left";
+                SpriteSheet = GlobalVariables.GameTexturesDictionary["playerMoveLeft"];
+                MoveLeft(deltaTime);
+                inputManager.SaveLastKeyPressed(Keys.Left);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Left))
+            {
+                IsMoving = false;
+            }
+
+            if (inputManager.IsKeyDown(Keys.Up))
+            {
+                IsMoving = true;
+                DirectionString = "Up";
+                SpriteSheet = GlobalVariables.GameTexturesDictionary["playerMoveUp"];
+                MoveUp(deltaTime);
+                inputManager.SaveLastKeyPressed(Keys.Up);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Up))
+            {
+                IsMoving = false;
+            }
+
+            if (inputManager.IsKeyDown(Keys.Down))
+            {
+                IsMoving = true;
+                DirectionString = "Down";
+                SpriteSheet = GlobalVariables.GameTexturesDictionary["playerMoveDown"];
+                MoveDown(deltaTime);
+                inputManager.SaveLastKeyPressed(Keys.Down);
+            }
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Down))
+            {
+                IsMoving = false;
+            }
+
+            if (!IsMoving)
+            {
+                IdleAnimation();
+            }
+
+            //Attack(gameTime);
+
+            if (inputManager.IsKeyDown(Keys.Space) && !inputManager.IsLastKeyPressedEqual(Keys.Space))
+            {
+                IsAttacking = true;
+                inputManager.SaveLastKeyPressed(Keys.Space);   
+                switch (DirectionString)
+                {
+                    case "Up":
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y);
+                        SpriteArray = SpriteArrayAttackVertical;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackUp"];
+                        break;
+
+                    case "Down":
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y);
+                        SpriteArray = SpriteArrayAttackVertical;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackDown"];
+                        break;
+
+                    case "Right":
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y - 16);
+                        SpriteArray = SpriteArrayAttackHorizontal;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackRight"];
+                        break;
+
+                    case "Left":
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y - 16);
+                        SpriteArray = SpriteArrayAttackHorizontal;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackLeft"];
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (animation.IsAnimationFinished && inputManager.IsLastKeyPressedEqual(Keys.Space))
+                {
+                    IsAttacking = false;
+                    SpriteArray = SpriteArrayIdle;
+                    IdleAnimation();
+                }
+            }
+
+            CollisionDetection();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White, 0f, Vector2.Zero, 1f, Effect, 0.0f);
+            spriteBatch.Draw(SpriteSheet, WorldPosition, SpriteArray[animation.FrameIndex], Color.White);
             attack?.Draw(spriteBatch);
         }
 
@@ -148,69 +190,28 @@ namespace GamePrototype.Entities.Player
 
         #region Private Methods
 
-        private void RightMovementAnimation(double deltaTime)
+        private void IdleAnimation()
         {
-            if (inputManager.IsKeyDown(Keys.Right))
+            switch (DirectionString)
             {
-                inputManager.SaveLastKeyPressed(Keys.Right);
-                MoveRight(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
-            {
-                SpriteArray = SpriteArrayIdleRight;
-            }
-        }
+                case "Up":
+                    SpriteSheet = GlobalVariables.GameTexturesDictionary["playerIdleUp"];
+                    break;
 
-        private void LeftMovementAnimation(double deltaTime)
-        {
-            if (inputManager.IsKeyDown(Keys.Left))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Left);
-                MoveLeft(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Right) && inputManager.IsKeyUp(Keys.Right) || inputManager.IsLastKeyPressedEqual(Keys.Left) && inputManager.IsKeyUp(Keys.Left))
-            {
-                SpriteArray = SpriteArrayIdleRight;
-            }
+                case "Down":
+                    SpriteSheet = GlobalVariables.GameTexturesDictionary["playerIdleDown"];
+                    break;
 
-        }
+                case "Left":
+                    SpriteSheet = GlobalVariables.GameTexturesDictionary["playerIdleLeft"];
+                    break;
 
-        private void UpMovementAnimation(double deltaTime)
-        {
-            if (inputManager.IsKeyDown(Keys.Up))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Up);
-                MoveUp(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Up) && inputManager.IsKeyUp(Keys.Up))
-            {
-                SpriteArray = SpriteArrayIdleUp;
-            }
-        }
+                case "Right":
+                    SpriteSheet = GlobalVariables.GameTexturesDictionary["playerIdleRight"];
+                    break;
 
-        private void DownMovementAnimation(double deltaTime)
-        {
-            if (inputManager.IsKeyDown(Keys.Down))
-            {
-                inputManager.SaveLastKeyPressed(Keys.Down);
-                MoveDown(deltaTime);
-            }
-            else if (inputManager.IsLastKeyPressedEqual(Keys.Down) && inputManager.IsKeyUp(Keys.Down))
-            {
-                SpriteArray = SpriteArrayIdleDown;
-            }
-        }
-
-        private int RemoveStamina(int power)
-        {
-            return Stamina - power;
-        }
-
-        private void RestoreStamina()
-        {
-            if (Stamina < 10)
-            {
-                Stamina++;
+                default:
+                    break;
             }
         }
 
@@ -218,29 +219,51 @@ namespace GamePrototype.Entities.Player
         {
             if (inputManager.IsKeyDown(Keys.Space))
             {
-                var actionBarElement = ActionBar.Items.FirstOrDefault(element => element.IsSelected);
-                if (!actionBarElement.IsFree && !IsAttacking)
+                IsAttacking = true;
+                inputManager.SaveLastKeyPressed(Keys.Space);
+                switch (DirectionString)
                 {
-                    IsAttacking = true;
-                    inputManager.SaveLastKeyPressed(Keys.Space);
-                    attack = new Attack(WorldPosition, Direction)
-                    {
-                        IsAnimationPlaying = true
-                    };
+                    case "Up":
+                        SpriteArray = SpriteArrayAttackVertical;
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y);
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackUp"];
+                        break;
+
+                    case "Down":
+                        SpriteArray = SpriteArrayAttackVertical;
+                        WorldPosition = new Vector2(WorldPosition.X - 16, WorldPosition.Y);
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackDown"];
+                        break;
+
+                    case "Left":
+                        SpriteArray = SpriteArrayAttackHorizontal;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackLeft"];
+                        break;
+
+                    case "Right":
+                        SpriteArray = SpriteArrayAttackHorizontal;
+                        SpriteSheet = GlobalVariables.GameTexturesDictionary["playerAttackRight"];
+                        break;
+
+                    default:
+                        break;
                 }
+
+                //var actionBarElement = ActionBar.Items.FirstOrDefault(element => element.IsSelected);
+                //if (!actionBarElement.IsFree && !IsAttacking)
+                //{
+                //    IsAttacking = true;
+                //    inputManager.SaveLastKeyPressed(Keys.Space);
+                //    attack = new Attack(WorldPosition, Direction)
+                //    {
+                //        IsAnimationPlaying = true
+                //    };
+                //}
             }
-            else
+            else if (inputManager.IsLastKeyPressedEqual(Keys.Space))
             {
                 IsAttacking = false;
-            }
-
-            if (attack != null)
-            {
-                attack?.Update(gameTime);
-                if (!attack.IsAnimationPlaying)
-                {
-                    attack = null;
-                }
+                SpriteArray = SpriteArrayIdle;
             }
         }
 
@@ -254,9 +277,31 @@ namespace GamePrototype.Entities.Player
         {
             if (collisionHandler.HandleCollisionsEntities(this))
             {
-                TakeDmg(AttackDamage);
+                //TakeDmg(AttackDamage);
                 //var knockBack = CalculateKnockBack(WorldPosition, 10);
                 //ApplyKnockBack(knockBack);
+
+                //switch (DirectionString)
+                //{
+                //    case "Up":
+                //        SpriteArray = SpriteArrayHitUp;
+                //        break;
+
+                //    case "Down":
+                //        SpriteArray = SpriteArrayHitDown;
+                //        break;
+
+                //    case "Left":
+                //        SpriteArray = SpriteArrayHitLeft;
+                //        break;
+
+                //    case "Right":
+                //        SpriteArray = SpriteArrayHitRight;
+                //        break;
+
+                //    default:
+                //        break;
+                //}
             }
 
             if (collisionHandler.HandleCollisionPowerUps(this))

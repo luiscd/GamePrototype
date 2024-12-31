@@ -20,10 +20,15 @@ namespace GamePrototype.Entities
         public Rectangle[] SpriteArrayDown { get; set; }
         public Rectangle[] SpriteArrayIdleDown { get; set; }
         public Rectangle[] SpriteArrayDie { get; set; }
+        public Rectangle[] SpriteArrayHitUp { get; set; }
+        public Rectangle[] SpriteArrayHitDown { get; set; }
+        public Rectangle[] SpriteArrayHitLeft { get; set; }
+        public Rectangle[] SpriteArrayHitRight { get; set; }
 
         public Rectangle CollisionBox { get; set; }
         public bool IsDead { get; set; }
         public bool IsHit { get; set; }
+        public bool IsMoving { get; set; }
 
         public int Radius { get; set; }
         public int SpriteSize { get; set; }
@@ -54,6 +59,9 @@ namespace GamePrototype.Entities
             set { direction = value; }
         }
 
+        private string directionString;
+        public string DirectionString { get; set; }
+
         public SpriteEffects Effect { get; set; }
 
         // Properties
@@ -68,7 +76,7 @@ namespace GamePrototype.Entities
 
         public BaseEntity()
         {
-            SpriteSheet = GlobalVariables.LoadSpriteSheet();
+            //SpriteSheet = GlobalVariables.LoadSpriteSheet();
             CollisionBox = new Rectangle((int)WorldPosition.X - 4, (int)WorldPosition.Y - 4, 8, 8);
         }
 
@@ -147,8 +155,6 @@ namespace GamePrototype.Entities
 
         public void MoveRight(double deltaTime)
         {
-            SpriteArray = SpriteArrayRight;
-            Effect = SpriteEffects.None;
             SetDirectionX(1);
             SetDirectionY(0);
             CalculateWorldPositionX(deltaTime);
@@ -156,8 +162,6 @@ namespace GamePrototype.Entities
 
         public void MoveLeft(double deltaTime)
         {
-            SpriteArray = SpriteArrayRight;
-            Effect = SpriteEffects.FlipHorizontally;
             SetDirectionX(-1);
             SetDirectionY(0);
             CalculateWorldPositionX(deltaTime);
@@ -165,7 +169,6 @@ namespace GamePrototype.Entities
 
         public void MoveUp(double deltaTime)
         {
-            SpriteArray = SpriteArrayUp;
             SetDirectionX(0);
             SetDirectionY(-1);
             CalculateWorldPositionY(deltaTime);
@@ -173,7 +176,6 @@ namespace GamePrototype.Entities
 
         public void MoveDown(double deltaTime)
         {
-            SpriteArray = SpriteArrayDown;
             SetDirectionX(0);
             SetDirectionY(1);
             CalculateWorldPositionY(deltaTime);

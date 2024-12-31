@@ -37,7 +37,7 @@ namespace GamePrototype
             level.LoadLevel();
             engine = new Engine.Engine(level);
 
-            LoadMob();
+            //LoadMob();
             LoadChest();
 
             LoadPlayer();

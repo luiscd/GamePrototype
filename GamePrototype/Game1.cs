@@ -34,6 +34,7 @@ namespace GamePrototype
 
         protected override void Initialize()
         {
+            GlobalVariables.LoadTextures();
             screen = new Screen();
             ui = new UI.UI();
             camera = new Camera(GraphicsDevice.Viewport, new Vector2(screen.player.WorldPosition.X, screen.player.WorldPosition.Y));
@@ -57,7 +58,8 @@ namespace GamePrototype
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);           
+            GraphicsDevice.Clear(Color.Black);   
+            //_spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, transformMatrix: camera.GetViewMatrix(screen.player, screen.engine));
             _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, transformMatrix: camera.GetViewMatrix(screen.player, screen.engine));
             screen.Draw(_spriteBatch);
             _spriteBatch.End();
